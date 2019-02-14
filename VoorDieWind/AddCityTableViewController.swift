@@ -54,6 +54,7 @@ class AddCityTableViewController : UITableViewController {
 
 extension AddCityTableViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
+        searchController.searchBar.isLoading = true
         if let city = searchController.searchBar.text {
             // TODO: Break this out to a service
             let weatherURL = URL(string: "http://api.worldweatheronline.com/premium/v1/search.ashx?query=\(city)&key=ed4a649fd5bd49b5a9425943190702&format=json")!
@@ -67,7 +68,7 @@ extension AddCityTableViewController: UISearchResultsUpdating {
                     return nil
                 }
             }
-            searchController.searchBar.isLoading = true
+            
             WebService().load(resource: weatherResource) { result in
                 searchController.searchBar.isLoading = false
             }
