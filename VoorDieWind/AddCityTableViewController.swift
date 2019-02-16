@@ -14,11 +14,12 @@ protocol AddCityTableViewControllerDelegate {
 }
 
 class AddCityTableViewController : UITableViewController {
-    
+    // TODO: Add view model
     let searchController = CustomSearchController(searchResultsController: nil) // nil -> use this view
     var delegate: AddCityTableViewControllerDelegate?
     var cities: CitySearchListViewModel?
     var shouldShowLoadingText: Bool = false
+    var errorMessage: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,7 +73,7 @@ class AddCityTableViewController : UITableViewController {
         if let city = cities?.citySearchViewModels[indexPath.row] {
             cell.textLabel?.text = city.cityName
         } else {
-            cell.textLabel?.text = "Aanhouer wen..."
+            cell.textLabel?.text = errorMessage
         }
         
         return cell
@@ -88,30 +89,42 @@ class AddCityTableViewController : UITableViewController {
 
 extension AddCityTableViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
- 
-        if let city = searchController.searchBar.text,
-            !city.isEmpty {
+        
+        if let cityString = searchController.searchBar.text,
+            !cityString.isEmpty {
             searchController.searchBar.isLoading = true
             shouldShowLoadingText = true
-            // TODO: Break this out to a service
-            let weatherURL = URL(string: "http://api.worldweatheronline.com/premium/v1/search.ashx?query=\(city)&key=ed4a649fd5bd49b5a9425943190702&format=json")!
-            let weatherResource = Resource<CitySearchListViewModel>(url: weatherURL) { data in
-                
-                if let searchModel = try? JSONDecoder().decode(CitySearchModel.self, from: data) {
-                    // This needs to be reworked
-                    self.cities = CitySearchListViewModel(from: searchModel)
-                    print(self.cities)
-                    self.tableView.reloadData()
-                    return self.cities
-                } else {
-                    self.cities = nil
-                    self.tableView.reloadData()
-                    return nil
-                }
-            }
-            
-            WebService().load(resource: weatherResource) { result in
+            WeatherService().getCities(for: cityString) { [weak self] (result) in
                 searchController.searchBar.isLoading = false
+                switch result {
+                case .success(let payload):
+                    // TODO: break out these functions
+                    if let knownPayload = payload {
+                        self?.errorMessage = nil
+                        self?.cities = CitySearchListViewModel(from: knownPayload)
+                    } else {
+                        self?.errorMessage = "Geen stad te vinde"
+                        self?.cities = nil
+                    }
+                    self?.tableView.reloadData()
+                case .failure(let error):
+                    self?.cities = nil
+                    self?.shouldShowLoadingText = true
+                    self?.tableView.reloadData()
+                    if let error = error {
+                        switch error {
+                        case .parsingFailed(_):
+                            self?.errorMessage = "Geen stad te vinde"
+                            print("Unable to find any matching weather location to the query submitted!")
+                        default:
+                            self?.errorMessage = "Oeps, daar kak hy"
+                            print(error.message)
+                        }
+                    } else {
+                        self?.errorMessage = "Oeps, daar kak hy"
+                        print("No error returned")
+                    }
+                }
             }
         } else {
             shouldShowLoadingText = false
