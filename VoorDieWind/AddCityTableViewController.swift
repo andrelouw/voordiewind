@@ -18,7 +18,7 @@ class AddCityTableViewController : UITableViewController {
     let searchController = CustomSearchController(searchResultsController: nil) // nil -> use this view
     var delegate: AddCityTableViewControllerDelegate?
     var cities: CitySearchListViewModel?
-    var shouldShowLoadingText: Bool = false
+    var shouldShowErrorMessage: Bool = false
     var errorMessage: String?
     
     override func viewDidLoad() {
@@ -63,7 +63,7 @@ class AddCityTableViewController : UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cities?.citySearchViewModels.count ?? (shouldShowLoadingText ? 1 : 0)
+        return cities?.citySearchViewModels.count ?? (shouldShowErrorMessage ? 1 : 0)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -93,9 +93,17 @@ extension AddCityTableViewController: UISearchResultsUpdating {
         if let cityString = searchController.searchBar.text,
             !cityString.isEmpty {
             searchController.searchBar.isLoading = true
-            shouldShowLoadingText = true
+            shouldShowErrorMessage = true
             WeatherService().getCities(for: cityString) { [weak self] (result) in
                 searchController.searchBar.isLoading = false
+                // Check if string is still valid, things might have changed since we last spoke
+                if self?.searchController.searchBar.text?.isEmpty ?? true {
+                    self?.errorMessage = nil
+                    self?.shouldShowErrorMessage = false
+                    self?.tableView.reloadData()
+                    return
+                }
+                
                 switch result {
                 case .success(let payload):
                     // TODO: break out these functions
@@ -109,7 +117,7 @@ extension AddCityTableViewController: UISearchResultsUpdating {
                     self?.tableView.reloadData()
                 case .failure(let error):
                     self?.cities = nil
-                    self?.shouldShowLoadingText = true
+                    self?.shouldShowErrorMessage = true
                     self?.tableView.reloadData()
                     if let error = error {
                         switch error {
@@ -127,7 +135,8 @@ extension AddCityTableViewController: UISearchResultsUpdating {
                 }
             }
         } else {
-            shouldShowLoadingText = false
+            self.errorMessage = nil
+            shouldShowErrorMessage = false
             self.tableView.reloadData()
         }
     }

@@ -9,7 +9,7 @@ enum HTTPErrorCode: Int {
     case unAuthorized = 401
     case notFound = 404
     case serverError = 500
-    case undefined
+    case undefined = 000
 }
 
 enum WebServiceFailure: Error {
@@ -22,7 +22,7 @@ enum WebServiceFailure: Error {
         case .customError(let error):
             return "An unexpected error occurred: \(error)"
         case .serviceCallFailed(let code):
-            return "The service call failed with error code: \(code)"
+            return "The service call failed with error code: \(code.rawValue)"
         case .parsingFailed(let error):
             return "Unable to parse response, with error: \(error)"
         }
