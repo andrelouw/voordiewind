@@ -11,6 +11,8 @@ import UIKit
 
 class WeatherListTableViewController: UITableViewController {
     
+    var cities = [CitySearchViewModel]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Voor die wind"
@@ -22,12 +24,15 @@ class WeatherListTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return cities.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell =  tableView.dequeueReusableCell(withIdentifier: "WeatherCell", for: indexPath) as! WeatherCell
-        cell.cityNameLabel.text = "Welkom"
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherCell", for: indexPath) as? WeatherCell
+        else { return UITableViewCell() }
+        
+        cell.cityNameLabel.text = cities[indexPath.row].cityName
         cell.temperatureLabel.text = "30°" // shift option 8 to get degrees
         
         return cell
@@ -37,4 +42,22 @@ class WeatherListTableViewController: UITableViewController {
         return 100
     }
     
+    func showAddCity() {
+       performSegue(withIdentifier: "showAddCity", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        guard let nav = segue.destination as? UINavigationController,
+            let vc = nav.viewControllers.first as? AddCityTableViewController else { return }
+        
+        vc.delegate = self
+    }
+}
+
+extension WeatherListTableViewController: AddCityTableViewControllerDelegate {
+    func addCity(_ tableView: AddCityTableViewController, didSelect city: CitySearchViewModel) {
+        cities.append(city)
+        self.tableView.reloadData()
+    }
 }
