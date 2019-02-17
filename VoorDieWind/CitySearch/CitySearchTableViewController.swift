@@ -2,13 +2,13 @@
 import Foundation
 import UIKit
 
-protocol AddCityTableViewControllerDelegate {
+protocol CitySearchTableViewControllerDelegate {
     func addCity(_ tableView: AddCityTableViewController, didSelect city: CitySearchViewModel)
 }
 
 class AddCityTableViewController : UITableViewController {
     let searchController = CustomSearchController(searchResultsController: nil) // nil -> use this view
-    var delegate: AddCityTableViewControllerDelegate?
+    var delegate: CitySearchTableViewControllerDelegate?
     var viewModel = CitySearchListViewModel()
     
     override func viewDidLoad() {

@@ -1,20 +1,12 @@
-//
-//  WeatherListTableViewController.swift
-//  VoorDieWind
-//
-//  Created by Andre Louw on 2019/02/14.
-//  Copyright © 2019 Andre Louw. All rights reserved.
-//
-
 import Foundation
 import UIKit
 
 class WeatherListTableViewController: UITableViewController {
-    
-    var cities = [CitySearchViewModel]()
+    var viewModel = WeatherListViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // TODO: To VM
         title = "Voor die wind"
         self.navigationController?.navigationBar.prefersLargeTitles = true
     }
@@ -24,7 +16,7 @@ class WeatherListTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cities.count
+        return viewModel.numberOfRows
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -32,8 +24,8 @@ class WeatherListTableViewController: UITableViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherCell", for: indexPath) as? WeatherCell
         else { return UITableViewCell() }
         
-        cell.cityNameLabel.text = cities[indexPath.row].name
-        cell.temperatureLabel.text = "30°" // shift option 8 to get degrees
+        cell.cityNameLabel.text = viewModel.cityName(for: indexPath.row)
+        cell.temperatureLabel.text = viewModel.cellTemperature(for: indexPath.row)
         
         return cell
     }
@@ -55,9 +47,9 @@ class WeatherListTableViewController: UITableViewController {
     }
 }
 
-extension WeatherListTableViewController: AddCityTableViewControllerDelegate {
+extension WeatherListTableViewController: CitySearchTableViewControllerDelegate {
     func addCity(_ tableView: AddCityTableViewController, didSelect city: CitySearchViewModel) {
-        cities.append(city)
+        viewModel.addCity(city)
         self.tableView.reloadData()
     }
 }
