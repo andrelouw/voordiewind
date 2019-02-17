@@ -16,14 +16,16 @@ struct CitySearchResultModel: Codable {
 
 struct CitySearchDetailsModel: Codable {
     let name: [JSON]
+    let region: [JSON]
+    let country: [JSON]
+    let longitude: String
+    let latitude: String
     
     private enum CodingKeys: String, CodingKey {
         case name = "areaName"
+        case region = "region"
+        case country = "country"
+        case longitude = "longitude"
+        case latitude = "latitude"
     }
-    //    let country: [String]
-    //    let region: [String]
-    //    let latitude: Double
-    //    let longtitude: Double
-    //    let population: Int
-    //    let weatherUrl: String
 }

@@ -47,9 +47,9 @@ extension CitySearchListViewModel {
         return nil
     }
     
-    func cellDescription(for row: Int) -> String? {
-        if !shouldShowErrorMessage, let country = cities?[row].country {
-            return country
+    func cellSubtitle(for row: Int) -> String? {
+        if !shouldShowErrorMessage, let subtitle = subtitle(for: cities?[row]) {
+            return subtitle
         }
         return nil
     }
@@ -77,12 +77,13 @@ extension CitySearchListViewModel {
     private func updateCities(with model: CitySearchModel) {
         cities = []
         for city in model.search.results {
-            cities?.append(CitySearchViewModel(
-                name: city.name.first?["value"] ?? "",
-                region: "",
-                country: "",
-                latitude: 0.00,
-                longitude: 0.00))
+            if let name = city.name.first?["value"],
+                let region = city.region.first?["value"],
+                let country = city.country.first?["value"],
+                let latitude = Double(city.latitude),
+                let longitude = Double(city.longitude) {
+                cities?.append(CitySearchViewModel(name: name, region: region, country: country, latitude: latitude, longitude: longitude))
+            }
         }
     }
     
@@ -152,6 +153,16 @@ extension CitySearchListViewModel {
     }
     
     private var querySearchErrorMessage: String {
-        return "Oeps, daar kak hy"
+        return "Oeps, daar kak hy!"
+    }
+}
+
+// MARK: - Strings
+extension CitySearchListViewModel {
+    private func subtitle(for city: CitySearchViewModel?) -> String? {
+        if let city = city {
+            return "\(city.region) • \(city.country)"
+        }
+        return nil
     }
 }

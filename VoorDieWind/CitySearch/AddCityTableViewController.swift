@@ -64,8 +64,8 @@ class AddCityTableViewController : UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "SearchCell") else { return UITableViewCell() }
-        
         cell.textLabel?.text = viewModel.cellTitle(for: indexPath.row)
+        cell.detailTextLabel?.text = viewModel.cellSubtitle(for: indexPath.row)
         return cell
     }
     
