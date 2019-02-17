@@ -11,28 +11,10 @@ class AddCityTableViewController : UITableViewController {
     var delegate: AddCityTableViewControllerDelegate?
     var viewModel = CitySearchListViewModel()
     
-    // TODO: to view model
-    var shouldShowErrorMessage: Bool = false
-    var errorMessage: String?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Navigation bar
-        navigationItem.prompt = "Soek jou stad"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Kanseleer", style: .plain, target: self, action: #selector(dismissViewController))
-        
-        searchController.searchResultsUpdater = self
-        searchController.hidesNavigationBarDuringPresentation = false
-        definesPresentationContext = true
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.dimsBackgroundDuringPresentation = false
-    
-        // searchbar
-        searchController.searchBar.sizeToFit()
-        searchController.searchBar.placeholder = "Sleutel 'n stad naam in"
-        navigationItem.titleView = searchController.searchBar
-        
+        setUpNavigationBar()
+        setUpSearchController()
         setUpBinding()
     }
     
@@ -42,17 +24,34 @@ class AddCityTableViewController : UITableViewController {
         }
     }
     
-    func delay(_ delay: Double, closure: @escaping ()->()) {
-        let when = DispatchTime.now() + delay
-        DispatchQueue.main.asyncAfter(deadline: when, execute: closure)
-    }
-    
-    
     @objc func dismissViewController() {
         searchController.isActive = false
         dismiss(animated: true, completion: nil)
     }
+}
+
+extension AddCityTableViewController {
+    private func setUpNavigationBar() {
+        navigationItem.prompt = viewModel.navigationPrompt
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: viewModel.cancelButton, style: .plain, target: self, action: #selector(dismissViewController))
+    }
     
+    private func setUpSearchController() {
+        searchController.searchResultsUpdater = self
+        searchController.hidesNavigationBarDuringPresentation = false
+        definesPresentationContext = true
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.dimsBackgroundDuringPresentation = false
+        
+        // searchbar
+        searchController.searchBar.sizeToFit()
+        searchController.searchBar.placeholder = viewModel.searchPlaceHolder
+        navigationItem.titleView = searchController.searchBar
+    }
+}
+
+// MARK: - Table view datasource
+extension AddCityTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -68,7 +67,10 @@ class AddCityTableViewController : UITableViewController {
         cell.detailTextLabel?.text = viewModel.cellSubtitle(for: indexPath.row)
         return cell
     }
-    
+}
+
+// MARK: - Table view delegate
+extension AddCityTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let city = viewModel.city(for: indexPath.row) else { return }
         delegate?.addCity(self, didSelect: city)
@@ -76,59 +78,36 @@ class AddCityTableViewController : UITableViewController {
     }
 }
 
-
+// MARK: - SearchController delegate
 extension AddCityTableViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
          viewModel.search(for: searchController.searchBar.text)
-//        if let cityString = searchController.searchBar.text,
-//            !cityString.isEmpty {
-//            searchController.searchBar.isLoading = true
-//            shouldShowErrorMessage = true
-//            WeatherService().getCities(for: cityString) { [weak self] (result) in
-//                searchController.searchBar.isLoading = false
-//                // Check if string is still valid, things might have changed since we last spoke
-//                if self?.searchController.searchBar.text?.isEmpty ?? true {
-//                    self?.errorMessage = nil
-//                    self?.shouldShowErrorMessage = false
-//                    self?.tableView.reloadData()
-//                    return
-//                }
-//
-//                switch result {
-//                case .success(let payload):
-//                    // TODO: break out these functions
-//                    if let knownPayload = payload {
-//                        self?.errorMessage = nil
-//                        self?.viewModel.updateViewModel(with: knownPayload)
-//                    } else {
-//                        self?.errorMessage = "Geen stad te vinde"
-//                        self?.viewModel.resetCities()
-//                    }
-//                    self?.tableView.reloadData()
-//                case .failure(let error):
-//                    self?.viewModel.resetCities()
-//                    self?.shouldShowErrorMessage = true
-//                    self?.tableView.reloadData()
-//                    if let error = error {
-//                        switch error {
-//                        case .parsingFailed(_):
-//                            self?.errorMessage = "Geen stad te vinde"
-//                            print("Unable to find any matching weather location to the query submitted!")
-//                        default:
-//                            self?.errorMessage = "Oeps, daar kak hy"
-//                            print(error.message)
-//                        }
-//                    } else {
-//                        self?.errorMessage = "Oeps, daar kak hy"
-//                        print("No error returned")
-//                    }
-//                }
-//            }
-//        } else {
-//            self.errorMessage = nil
-//            shouldShowErrorMessage = false
-//            self.tableView.reloadData()
-//        }
+    }
+}
+
+// MARK: - Binding
+extension AddCityTableViewController {
+    func setUpBinding() {
+        viewModel.reloadTableViewClosure = { [weak self] () in
+            DispatchQueue.main.async {
+                // TODO: set whether cell is selctable or not
+                self?.tableView.reloadData()
+            }
+        }
+        
+        viewModel.updateLoadingStatus = { [weak self] (isLoading) in
+            DispatchQueue.main.async {
+                self?.searchController.searchBar.isLoading = isLoading
+            }
+        }
+    }
+}
+
+// MARK: - Helpers
+extension AddCityTableViewController {
+    func delay(_ delay: Double, closure: @escaping ()->()) {
+        let when = DispatchTime.now() + delay
+        DispatchQueue.main.asyncAfter(deadline: when, execute: closure)
     }
 }
 
@@ -147,57 +126,3 @@ class CustomSearchBar: UISearchBar {
     }
 }
 
-extension UISearchBar {
-    private var textField: UITextField? {
-        let subViews = self.subviews.flatMap { $0.subviews }
-        return (subViews.filter { $0 is UITextField }).first as? UITextField
-    }
-    
-    private var searchIcon: UIImage? {
-        return UITabBarItem(tabBarSystemItem: .search, tag: 0).image
-    }
-
-    private var activityIndicator: UIActivityIndicatorView? {
-        return textField?.leftView?.subviews.compactMap{ $0 as? UIActivityIndicatorView }.first
-    }
-    
-    var isLoading: Bool {
-        get {
-            return activityIndicator != nil
-        } set {
-            if newValue {
-                if activityIndicator == nil {
-                    let _activityIndicator = UIActivityIndicatorView(style: .gray)
-                    _activityIndicator.startAnimating()
-                    _activityIndicator.backgroundColor = UIColor.clear
-                    self.setImage(UIImage(), for: .search, state: .normal)
-                    textField?.leftView?.addSubview(_activityIndicator)
-                    let leftViewSize = textField?.leftView?.frame.size ?? CGSize.zero
-                    _activityIndicator.center = CGPoint(x: leftViewSize.width/2, y: leftViewSize.height/2)
-                }
-            } else {
-                self.setImage(searchIcon, for: .search, state: .normal)
-                activityIndicator?.removeFromSuperview()
-            }
-        }
-    }
-}
-
-// MARK: - Binding
-extension AddCityTableViewController {
-    func setUpBinding() {
-        viewModel.reloadTableViewClosure = { [weak self] () in
-            DispatchQueue.main.async {
-                self?.tableView.reloadData()
-            }
-        }
-        
-        viewModel.updateLoadingStatus = { [weak self] (isLoading) in
-            DispatchQueue.main.async {
-                self?.searchController.searchBar.isLoading = isLoading
-            }
-        }
-        
-       
-    }
-}

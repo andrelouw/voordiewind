@@ -48,7 +48,13 @@ extension CitySearchListViewModel {
     }
     
     func cellSubtitle(for row: Int) -> String? {
-        if !shouldShowErrorMessage, let subtitle = subtitle(for: cities?[row]) {
+        if shouldShowErrorMessage {
+            if errorMessage == noDataMessage {
+                return noDataMessageSubtitle
+            } else if errorMessage == querySearchErrorMessage {
+                return querySearchErrorMessageSubtitle
+            }
+        } else if let subtitle = subtitle(for: cities?[row]) {
             return subtitle
         }
         return nil
@@ -155,6 +161,14 @@ extension CitySearchListViewModel {
     private var querySearchErrorMessage: String {
         return "Oeps, daar kak hy!"
     }
+    
+    private var noDataMessageSubtitle: String {
+        return "Daardie help ons nie, bietjie meer inligting asb!"
+    }
+    
+    private var querySearchErrorMessageSubtitle: String {
+        return "Sulke dinge gebeur maar..."
+    }
 }
 
 // MARK: - Strings
@@ -164,5 +178,17 @@ extension CitySearchListViewModel {
             return "\(city.region) • \(city.country)"
         }
         return nil
+    }
+    
+    var navigationPrompt: String {
+        return "Soek jou stad"
+    }
+    
+    var cancelButton: String {
+        return "Kanseleer"
+    }
+    
+    var searchPlaceHolder: String {
+        return "Sleutel 'n stad naam in"
     }
 }
