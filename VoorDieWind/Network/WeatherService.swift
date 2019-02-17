@@ -7,20 +7,39 @@ final class WeatherService {
     
     enum WeatherServicePath: String {
         case search = "search"
-        case forecast = "weather"
+        case weather = "weather"
     }
 }
 
 // MARK: - City search
 extension WeatherService {
-    typealias CitySearchResultType = CitySearchModel
-    typealias CitySearchCompletion = (_ result: Result<CitySearchResultType?, WebServiceFailure>) -> Void
+//    typealias CitySearchResultType = CitySearchModel
+    typealias CitySearchCompletion<ResultType> = (_ result: Result<ResultType?, WebServiceFailure>) -> Void
     
-    func getCities(for search: String, completion: @escaping CitySearchCompletion) {
+    func getCities<ResultType: Decodable>(for search: String, completion: @escaping CitySearchCompletion<ResultType>) {
         guard var url = weatherServiceURL(for: .search) else {return}
         url.appendQueryParameters(["query": search])
-        let resource = Resource<CitySearchResultType>(url: url) { (data) -> CitySearchModel? in
-            return try JSONDecoder().decode(CitySearchModel.self, from: data)
+        let resource = Resource<ResultType>(url: url) { (data) -> ResultType? in
+            return try JSONDecoder().decode(ResultType.self, from: data)
+        }
+        
+        WebService().get(resource: resource) { (result) in
+            DispatchQueue.main.async {
+                completion(result)
+            }
+        }
+    }
+}
+
+// MARK: - Weather current/forecast
+extension WeatherService {
+    typealias WeatherSearchCompletion<ResultType> = (_ result: Result<ResultType?, WebServiceFailure>) -> Void
+    
+    func getWeather<ResultType: Decodable>(for latLon: String, completion: @escaping WeatherSearchCompletion<ResultType>) {
+        guard var url = weatherServiceURL(for: .weather) else {return}
+        url.appendQueryParameters(["query": latLon])
+        let resource = Resource<ResultType>(url: url) { (data) -> ResultType? in
+            return try JSONDecoder().decode(ResultType.self, from: data)
         }
         
         WebService().get(resource: resource) { (result) in

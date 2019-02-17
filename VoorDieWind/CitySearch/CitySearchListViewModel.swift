@@ -1,6 +1,8 @@
 import Foundation
 
 class CitySearchListViewModel {
+    typealias CitySearchResultType = CitySearchModel
+    
     private var cities: [CitySearchViewModel]? {
         didSet {
             self.reloadTableViewClosure?()
@@ -63,7 +65,8 @@ extension CitySearchListViewModel {
     func search(for city: String?) {
         if let cityString = city, !cityString.isEmpty {
             isSearching = true
-            WeatherService().getCities(for: cityString) { [weak self] (result) in
+
+            WeatherService().getCities(for: cityString) { [weak self] (result: Result<CitySearchResultType?, WebServiceFailure>) in // << how to bypass this?
                 self?.isSearching = false
                 switch result {
                 case .success(let payload):
@@ -111,7 +114,7 @@ extension CitySearchListViewModel {
         //
     }
     
-    private func handleSearchSuccess(with payload: WeatherService.CitySearchResultType?) {
+    private func handleSearchSuccess(with payload: CitySearchResultType?) {
         if let knownPayload = payload {
             errorMessage = nil
             updateCities(with: knownPayload)
