@@ -1,1 +1,1 @@
-typealias JSON = Dictionary<String, Any>
+typealias JSON = Dictionary<String, String>

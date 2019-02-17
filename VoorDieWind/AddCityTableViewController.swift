@@ -1,10 +1,3 @@
-//
-//  AddCityViewController.swift
-//  VoorDieWind
-//
-//  Created by Andre Louw on 2019/02/14.
-//  Copyright © 2019 Andre Louw. All rights reserved.
-//
 
 import Foundation
 import UIKit
@@ -63,15 +56,15 @@ class AddCityTableViewController : UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cities?.citySearchViewModels.count ?? (shouldShowErrorMessage ? 1 : 0)
+        return cities?.cities.count ?? (shouldShowErrorMessage ? 1 : 0)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "SearchCell") else { return UITableViewCell() }
         
-        if let city = cities?.citySearchViewModels[indexPath.row] {
-            cell.textLabel?.text = city.cityName
+        if let city = cities?.cities[indexPath.row] {
+            cell.textLabel?.text = city.name
         } else {
             cell.textLabel?.text = errorMessage
         }
@@ -80,7 +73,7 @@ class AddCityTableViewController : UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let city = cities?.citySearchViewModels[indexPath.row] else { return }
+        guard let city = cities?.cities[indexPath.row] else { return }
         delegate?.addCity(self, didSelect: city)
         self.dismissViewController()
     }

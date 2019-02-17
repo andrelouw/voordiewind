@@ -32,7 +32,7 @@ class WeatherListTableViewController: UITableViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherCell", for: indexPath) as? WeatherCell
         else { return UITableViewCell() }
         
-        cell.cityNameLabel.text = cities[indexPath.row].cityName
+        cell.cityNameLabel.text = cities[indexPath.row].name
         cell.temperatureLabel.text = "30°" // shift option 8 to get degrees
         
         return cell
