@@ -7,10 +7,11 @@ protocol AddCityTableViewControllerDelegate {
 }
 
 class AddCityTableViewController : UITableViewController {
-    // TODO: Add view model
     let searchController = CustomSearchController(searchResultsController: nil) // nil -> use this view
     var delegate: AddCityTableViewControllerDelegate?
-    var cities: CitySearchListViewModel?
+    var viewModel = CitySearchListViewModel()
+    
+    // TODO: to view model
     var shouldShowErrorMessage: Bool = false
     var errorMessage: String?
     
@@ -56,24 +57,19 @@ class AddCityTableViewController : UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cities?.cities.count ?? (shouldShowErrorMessage ? 1 : 0)
+        return viewModel.numberOfCities
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "SearchCell") else { return UITableViewCell() }
         
-        if let city = cities?.cities[indexPath.row] {
-            cell.textLabel?.text = city.name
-        } else {
-            cell.textLabel?.text = errorMessage
-        }
-        
+        cell.textLabel?.text = viewModel.cellTitle(for: indexPath.row)
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let city = cities?.cities[indexPath.row] else { return }
+        guard let city = viewModel.city(for: indexPath.row) else { return }
         delegate?.addCity(self, didSelect: city)
         self.dismissViewController()
     }
@@ -102,14 +98,14 @@ extension AddCityTableViewController: UISearchResultsUpdating {
                     // TODO: break out these functions
                     if let knownPayload = payload {
                         self?.errorMessage = nil
-                        self?.cities = CitySearchListViewModel(from: knownPayload)
+                        self?.viewModel.updateViewModel(with: knownPayload)
                     } else {
                         self?.errorMessage = "Geen stad te vinde"
-                        self?.cities = nil
+                        self?.viewModel.resetCities()
                     }
                     self?.tableView.reloadData()
                 case .failure(let error):
-                    self?.cities = nil
+                    self?.viewModel.resetCities()
                     self?.shouldShowErrorMessage = true
                     self?.tableView.reloadData()
                     if let error = error {
