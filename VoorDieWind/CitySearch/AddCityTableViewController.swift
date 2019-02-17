@@ -32,7 +32,8 @@ class AddCityTableViewController : UITableViewController {
         searchController.searchBar.sizeToFit()
         searchController.searchBar.placeholder = "Sleutel 'n stad naam in"
         navigationItem.titleView = searchController.searchBar
-  
+        
+        setUpBinding()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -57,7 +58,7 @@ class AddCityTableViewController : UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.numberOfCities
+        return viewModel.numberOfRows
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -78,56 +79,56 @@ class AddCityTableViewController : UITableViewController {
 
 extension AddCityTableViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        
-        if let cityString = searchController.searchBar.text,
-            !cityString.isEmpty {
-            searchController.searchBar.isLoading = true
-            shouldShowErrorMessage = true
-            WeatherService().getCities(for: cityString) { [weak self] (result) in
-                searchController.searchBar.isLoading = false
-                // Check if string is still valid, things might have changed since we last spoke
-                if self?.searchController.searchBar.text?.isEmpty ?? true {
-                    self?.errorMessage = nil
-                    self?.shouldShowErrorMessage = false
-                    self?.tableView.reloadData()
-                    return
-                }
-                
-                switch result {
-                case .success(let payload):
-                    // TODO: break out these functions
-                    if let knownPayload = payload {
-                        self?.errorMessage = nil
-                        self?.viewModel.updateViewModel(with: knownPayload)
-                    } else {
-                        self?.errorMessage = "Geen stad te vinde"
-                        self?.viewModel.resetCities()
-                    }
-                    self?.tableView.reloadData()
-                case .failure(let error):
-                    self?.viewModel.resetCities()
-                    self?.shouldShowErrorMessage = true
-                    self?.tableView.reloadData()
-                    if let error = error {
-                        switch error {
-                        case .parsingFailed(_):
-                            self?.errorMessage = "Geen stad te vinde"
-                            print("Unable to find any matching weather location to the query submitted!")
-                        default:
-                            self?.errorMessage = "Oeps, daar kak hy"
-                            print(error.message)
-                        }
-                    } else {
-                        self?.errorMessage = "Oeps, daar kak hy"
-                        print("No error returned")
-                    }
-                }
-            }
-        } else {
-            self.errorMessage = nil
-            shouldShowErrorMessage = false
-            self.tableView.reloadData()
-        }
+         viewModel.search(for: searchController.searchBar.text)
+//        if let cityString = searchController.searchBar.text,
+//            !cityString.isEmpty {
+//            searchController.searchBar.isLoading = true
+//            shouldShowErrorMessage = true
+//            WeatherService().getCities(for: cityString) { [weak self] (result) in
+//                searchController.searchBar.isLoading = false
+//                // Check if string is still valid, things might have changed since we last spoke
+//                if self?.searchController.searchBar.text?.isEmpty ?? true {
+//                    self?.errorMessage = nil
+//                    self?.shouldShowErrorMessage = false
+//                    self?.tableView.reloadData()
+//                    return
+//                }
+//
+//                switch result {
+//                case .success(let payload):
+//                    // TODO: break out these functions
+//                    if let knownPayload = payload {
+//                        self?.errorMessage = nil
+//                        self?.viewModel.updateViewModel(with: knownPayload)
+//                    } else {
+//                        self?.errorMessage = "Geen stad te vinde"
+//                        self?.viewModel.resetCities()
+//                    }
+//                    self?.tableView.reloadData()
+//                case .failure(let error):
+//                    self?.viewModel.resetCities()
+//                    self?.shouldShowErrorMessage = true
+//                    self?.tableView.reloadData()
+//                    if let error = error {
+//                        switch error {
+//                        case .parsingFailed(_):
+//                            self?.errorMessage = "Geen stad te vinde"
+//                            print("Unable to find any matching weather location to the query submitted!")
+//                        default:
+//                            self?.errorMessage = "Oeps, daar kak hy"
+//                            print(error.message)
+//                        }
+//                    } else {
+//                        self?.errorMessage = "Oeps, daar kak hy"
+//                        print("No error returned")
+//                    }
+//                }
+//            }
+//        } else {
+//            self.errorMessage = nil
+//            shouldShowErrorMessage = false
+//            self.tableView.reloadData()
+//        }
     }
 }
 
@@ -179,5 +180,24 @@ extension UISearchBar {
                 activityIndicator?.removeFromSuperview()
             }
         }
+    }
+}
+
+// MARK: - Binding
+extension AddCityTableViewController {
+    func setUpBinding() {
+        viewModel.reloadTableViewClosure = { [weak self] () in
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        }
+        
+        viewModel.updateLoadingStatus = { [weak self] (isLoading) in
+            DispatchQueue.main.async {
+                self?.searchController.searchBar.isLoading = isLoading
+            }
+        }
+        
+       
     }
 }
