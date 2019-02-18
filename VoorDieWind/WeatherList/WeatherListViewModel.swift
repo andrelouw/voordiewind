@@ -18,16 +18,9 @@ extension WeatherListViewModel {
         return nil
     }
     
-    func cityName(for row: Int) -> String? {
-        if let name = cities?[row].name {
-            return name
-        }
-        return nil
-    }
-    
-    func cellTemperature(for row: Int) -> String? {
-       if let temperature = cities?[row].temperature {
-            return temperature
+    func weatherViewModel(for row: Int) -> WeatherViewModel? {
+        if let viewModel = cities?[row] {
+            return viewModel
         }
         return nil
     }
@@ -38,9 +31,19 @@ extension WeatherListViewModel {
             cities = []
         }
         
-//        "30°" // shift option 8 to get degrees
-        let newCity = WeatherViewModel(name: city.name, temperature: "50°")
+        let newCity = WeatherViewModel(with: city.name, latitude: Double(city.latitude), longitude: Double(city.longitude))
         cities?.append(newCity)
+
     }
 }
 
+extension WeatherListViewModel {
+    func updateWeatherList() {
+        if let cities = cities {
+            for city in cities {
+                city.getWeather()
+            }
+        }
+        
+    }
+}

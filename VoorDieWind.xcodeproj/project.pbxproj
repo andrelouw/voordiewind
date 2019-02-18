@@ -117,8 +117,8 @@
 		65A44FD62215D2590003E9A5 /* VoorDieWind */ = {
 			isa = PBXGroup;
 			children = (
-				654F000B22199233003CD137 /* WeatherList */,
 				654F000422198039003CD137 /* Extensions */,
+				654F000B22199233003CD137 /* WeatherList */,
 				654FFFF722197F10003CD137 /* CitySearch */,
 				65F0622B22181E2A009153DA /* Helpers */,
 				65F0622222181BA4009153DA /* Network */,
