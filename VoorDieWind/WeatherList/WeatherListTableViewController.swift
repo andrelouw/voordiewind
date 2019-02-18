@@ -9,6 +9,25 @@ class WeatherListTableViewController: UITableViewController {
         // TODO: To VM
         title = "Voor die wind"
         self.navigationController?.navigationBar.prefersLargeTitles = true
+        
+        WeatherService().get(.weather, for: "19.7872,-101.6208", withModel: WeatherModel.self) { (result) in
+            switch result {
+            case .success(let payload):
+                if let current = payload?.data.current.first {
+                    print("Today:")
+                    print("\(current.temperature) - \(current.feelsLike)")
+                }
+                if let forecast = payload?.data.forecast {
+                    print("Forecast:")
+                    for day in forecast {
+                        print("\(day.date) - \(day.maxTemperature) - \(day.minTemperature)")
+                    }
+                }
+            case .failure(let error):
+                   print(error)
+            }
+         
+        }
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
