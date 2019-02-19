@@ -74,4 +74,8 @@ extension WeatherListTableViewController: CitySearchTableViewControllerDelegate 
         viewModel.updateWeatherList()
         self.tableView.reloadData()
     }
+    
+    func addCity(_ tableView: AddCityTableViewController, shouldAdd city: CitySearchViewModel) -> Bool {
+        return !viewModel.contains(city)
+    }
 }

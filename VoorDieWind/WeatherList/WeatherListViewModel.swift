@@ -35,6 +35,10 @@ extension WeatherListViewModel {
         cities?.append(newCity)
 
     }
+    
+    func contains(_ city: CitySearchViewModel) -> Bool {
+        return cities?.contains { $0.latLon == "\(city.latitude),\(city.longitude)"} ?? false
+    }
 }
 
 extension WeatherListViewModel {

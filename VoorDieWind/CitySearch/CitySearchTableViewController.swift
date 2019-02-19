@@ -4,6 +4,7 @@ import UIKit
 
 protocol CitySearchTableViewControllerDelegate {
     func addCity(_ tableView: AddCityTableViewController, didSelect city: CitySearchViewModel)
+    func addCity(_ tableView: AddCityTableViewController, shouldAdd city: CitySearchViewModel) -> Bool
 }
 
 class AddCityTableViewController : UITableViewController {
@@ -73,8 +74,15 @@ extension AddCityTableViewController {
 extension AddCityTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let city = viewModel.city(for: indexPath.row) else { return }
-        delegate?.addCity(self, didSelect: city)
-        self.dismissViewController()
+        if delegate?.addCity(self, shouldAdd: city) ?? false {
+            delegate?.addCity(self, didSelect: city)
+            self.dismissViewController()
+        } else {
+            let alert = UIAlertController(title: "Kies 'n ander een", message: "Die stad is reeds in jou voer, of het jy vergeet?", preferredStyle: .alert)
+            let action = UIAlertAction(title: "Goed so", style: .default, handler: nil)
+            alert.addAction(action)
+            self.present(alert, animated: true, completion: nil)
+        }
     }
 }
 

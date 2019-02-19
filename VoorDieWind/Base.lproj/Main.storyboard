@@ -37,16 +37,35 @@
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jy8-RX-z65">
+                                            <rect key="frame" x="323" y="78.5" width="36" height="17"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ACO-5h-STs">
+                                            <rect key="frame" x="319" y="30" width="40" height="40"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="40" id="3zn-Zs-3EP"/>
+                                                <constraint firstAttribute="width" constant="40" id="NMI-bp-u0O"/>
+                                            </constraints>
+                                        </activityIndicatorView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="Nue-We-Ieg" firstAttribute="centerY" secondItem="hzc-0r-SbS" secondAttribute="centerY" id="4nw-G8-V7W"/>
                                         <constraint firstItem="Nue-We-Ieg" firstAttribute="leading" secondItem="hzc-0r-SbS" secondAttribute="leadingMargin" id="8WK-KO-sXI"/>
+                                        <constraint firstItem="Jy8-RX-z65" firstAttribute="trailing" secondItem="55H-nc-oFF" secondAttribute="trailing" id="9Tb-Bd-c58"/>
+                                        <constraint firstItem="ACO-5h-STs" firstAttribute="centerY" secondItem="55H-nc-oFF" secondAttribute="centerY" id="Fop-kz-MKc"/>
+                                        <constraint firstAttribute="bottom" secondItem="Jy8-RX-z65" secondAttribute="bottom" constant="4" id="rEd-iY-Km4"/>
+                                        <constraint firstItem="ACO-5h-STs" firstAttribute="trailing" secondItem="55H-nc-oFF" secondAttribute="trailing" id="v0Q-HP-PUL"/>
                                         <constraint firstItem="55H-nc-oFF" firstAttribute="centerY" secondItem="hzc-0r-SbS" secondAttribute="centerY" id="yRU-sr-3E3"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="55H-nc-oFF" secondAttribute="trailing" id="z0X-6x-Guq"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="cityNameLabel" destination="Nue-We-Ieg" id="mgs-1M-Sr5"/>
+                                    <outlet property="feelsLikeLabel" destination="Jy8-RX-z65" id="h0m-ly-gM1"/>
+                                    <outlet property="loadingActivityIndicator" destination="ACO-5h-STs" id="Hzw-2Q-in3"/>
                                     <outlet property="temperatureLabel" destination="55H-nc-oFF" id="bwe-Hh-1b0"/>
                                 </connections>
                             </tableViewCell>
