@@ -3,10 +3,17 @@ struct CurrentWeatherViewModel {
     var feelsLike: String?
 }
 
+struct ForecastWeatherViewModel {
+    var date: String
+    var maxTemperature: String
+    var minTemperature: String
+}
+
 class WeatherViewModel {
     let name: String
     let latLon: String
     var currentWeather: CurrentWeatherViewModel?
+    var forecastWeather: [ForecastWeatherModel]?
     
     private(set) var isUpdating: Bool = false {
         didSet {
@@ -53,10 +60,13 @@ extension WeatherViewModel {
 
                 }
                 if let forecast = payload?.data.forecast {
-//                    print("Forecast:")
-//                    for day in forecast {
-//                        print("\(day.date) - \(day.maxTemperature) - \(day.minTemperature)")
-//                    }
+                    self.forecastWeather = []
+                    for day in forecast {
+                        let weather = ForecastWeatherModel(date: day.date,
+                                                           maxTemperature: day.maxTemperature,
+                                                           minTemperature: day.minTemperature)
+                        self.forecastWeather?.append(weather)
+                    }
                 }
             case .failure(let error):
                 print(error)

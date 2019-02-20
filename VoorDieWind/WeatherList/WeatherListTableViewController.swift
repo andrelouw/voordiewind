@@ -64,8 +64,6 @@ class WeatherListTableViewController: UITableViewController {
         
         vc.delegate = self
     }
-    
-    
 }
 
 extension WeatherListTableViewController: CitySearchTableViewControllerDelegate {
