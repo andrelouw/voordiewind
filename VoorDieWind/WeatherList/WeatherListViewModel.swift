@@ -2,6 +2,7 @@ import Foundation
 
 protocol WeatherListViewModelDelegate {
     func weatherList(_ viewModel: WeatherListViewModel, didFinishUpdate: Bool)
+    func weatherList(_ viewModel: WeatherListViewModel, didRemove row: Int)
 }
 
 class WeatherListViewModel {
@@ -11,7 +12,6 @@ class WeatherListViewModel {
 
 // MARK: - Public interface
 extension WeatherListViewModel {
-    
     
     var numberOfRows: Int {
         if let numberOfCities = cities?.count {
@@ -51,10 +51,18 @@ extension WeatherListViewModel {
     }
 }
 
+extension WeatherListViewModel {
+    func removeCity(at row: Int) {
+        if let _ = cities?.remove(at: row){
+            delegate?.weatherList(self, didRemove: row)
+        }
+    }
+}
+
 // MARK: - Update all weather
 extension WeatherListViewModel {
     func updateWeatherList() {
-        if let cities = cities {
+        if let cities = cities, cities.count > 0 {
             for city in cities {
                 city.getWeather()
             }

@@ -36,10 +36,22 @@ class WeatherListTableViewController: UITableViewController {
         return 100
     }
     
-    func showAddCity() {
-       performSegue(withIdentifier: "showAddCity", sender: self)
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
     }
     
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let modifyAction = UIContextualAction(style: .normal, title:  "Delete", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+            self.showDeleteAlert(for: indexPath)
+            success(true)
+        })
+        
+        modifyAction.backgroundColor = .red
+        modifyAction.title = "Verwyder"
+        
+        return UISwipeActionsConfiguration(actions: [modifyAction])
+    }
+   
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         guard let nav = segue.destination as? UINavigationController,
@@ -49,7 +61,13 @@ class WeatherListTableViewController: UITableViewController {
     }
 }
 
+// MARK: - City search
 extension WeatherListTableViewController: CitySearchTableViewControllerDelegate {
+    // For convenience only
+    func showAddCity() {
+        performSegue(withIdentifier: "showAddCity", sender: self)
+    }
+    
     func citySearch(_ tableView: CitySearchTableViewController, didSelect city: CitySearchViewModel) {
         viewModel.addCity(city)
         self.tableView.reloadData()
@@ -71,6 +89,32 @@ extension WeatherListTableViewController: WeatherListViewModelDelegate {
             print("Finished update")
             refreshControl?.endRefreshing()
         }
+    }
+}
+
+// MARK: - Remove cell
+extension WeatherListTableViewController {
+    @objc func removeRow(at indexPath: IndexPath) {
+        viewModel.removeCity(at: indexPath.row)
+    }
+    
+    func weatherList(_ viewModel: WeatherListViewModel, didRemove row: Int) {
+        let indexPath = IndexPath(row: row, section: 0)
+        tableView.beginUpdates()
+        tableView.deleteRows(at: [indexPath], with: .left)
+        tableView.endUpdates()
+    }
+    
+    func showDeleteAlert(for indexPath: IndexPath) {
+        let alert = UIAlertController(title: "Is jy seker?", message: "Het jy vrede gemaak, die stad gaan nou jou voer verlaat", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Gaan voort", style: .destructive, handler: { [weak self] _ in
+            self?.removeRow(at: indexPath)
+        })
+        let cancelAction = UIAlertAction(title: "Gaan terug", style: .default, handler: nil)
+        
+        alert.addAction(cancelAction)
+        alert.addAction(okAction)
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
