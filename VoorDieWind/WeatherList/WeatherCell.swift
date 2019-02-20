@@ -35,7 +35,7 @@ class WeatherCell: UITableViewCell {
             }
         }
         
-        viewModel?.updateLoadingStatus = { [weak self] (isUpdating) in
+        viewModel?.updateWeatherLoadingStatus = { [weak self] (isUpdating) in
             DispatchQueue.main.async {
                 if isUpdating{
                     self?.loadingActivityIndicator.startAnimating()

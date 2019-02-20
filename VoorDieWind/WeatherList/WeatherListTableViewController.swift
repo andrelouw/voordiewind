@@ -9,26 +9,9 @@ class WeatherListTableViewController: UITableViewController {
         // TODO: To VM
         title = "Voor die wind"
         self.navigationController?.navigationBar.prefersLargeTitles = true
-        
-        // Each cell needs to do this, so WatherViewModel needs to do this
-//        WeatherService().get(.weather, for: "19.7872,-101.6208", withModel: WeatherModel.self) { (result) in
-//            switch result {
-//            case .success(let payload):
-//                if let current = payload?.data.current.first {
-//                    print("Today:")
-//                    print("\(current.temperature) - \(current.feelsLike)")
-//                }
-//                if let forecast = payload?.data.forecast {
-//                    print("Forecast:")
-//                    for day in forecast {
-//                        print("\(day.date) - \(day.maxTemperature) - \(day.minTemperature)")
-//                    }
-//                }
-//            case .failure(let error):
-//                   print(error)
-//            }
-//
-//        }
+        viewModel.delegate = self
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action: #selector(handleRefresh(_:)), for: .valueChanged)
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -69,7 +52,6 @@ class WeatherListTableViewController: UITableViewController {
 extension WeatherListTableViewController: CitySearchTableViewControllerDelegate {
     func citySearch(_ tableView: CitySearchTableViewController, didSelect city: CitySearchViewModel) {
         viewModel.addCity(city)
-        viewModel.updateWeatherList()
         self.tableView.reloadData()
     }
     
@@ -77,3 +59,18 @@ extension WeatherListTableViewController: CitySearchTableViewControllerDelegate 
         return !viewModel.contains(city)
     }
 }
+
+// MARK: - Refresh
+extension WeatherListTableViewController: WeatherListViewModelDelegate {
+    @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
+        viewModel.updateWeatherList()
+    }
+    
+    func weatherList(_ viewModel: WeatherListViewModel, didFinishUpdate: Bool) {
+        if didFinishUpdate {
+            print("Finished update")
+            refreshControl?.endRefreshing()
+        }
+    }
+}
+

@@ -35,7 +35,9 @@ final class WebService {
     
     func get<Payload>(resource: Resource<Payload>, completion: @escaping WebServiceCompletion<Payload>) {
         URLSession.shared.invalidateAndCancel()
-        var request = URLRequest(url: resource.url)
+        var request = URLRequest(url: resource.url,
+                                 cachePolicy:NSURLRequest.CachePolicy.reloadIgnoringLocalAndRemoteCacheData,
+                                 timeoutInterval: 5.0)
         request.httpMethod = "GET"
         URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {

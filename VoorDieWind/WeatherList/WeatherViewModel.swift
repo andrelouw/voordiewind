@@ -9,15 +9,21 @@ struct ForecastWeatherViewModel {
     var minTemperature: String
 }
 
+protocol WeatherViewModelDelegate {
+    func weather(_ viewModel: WeatherViewModel, didFinish update: Bool)
+}
+
 class WeatherViewModel {
-    let name: String
-    let latLon: String
-    var currentWeather: CurrentWeatherViewModel?
-    var forecastWeather: [ForecastWeatherModel]?
+    private(set) var name: String
+    private(set) var latLon: String
+    private(set) var currentWeather: CurrentWeatherViewModel?
+    private(set) var forecastWeather: [ForecastWeatherModel]?
+    var delegate: WeatherViewModelDelegate?
+    
     
     private(set) var isUpdating: Bool = false {
         didSet {
-            self.updateLoadingStatus?(isUpdating)
+            self.updateWeatherLoadingStatus?(isUpdating)
         }
     }
     
@@ -43,12 +49,13 @@ class WeatherViewModel {
     }
     
     var didUpdateCurrentWeather: (() -> ())?
-    var updateLoadingStatus: ((_ isUpdating: Bool) -> ())?
+    var updateWeatherLoadingStatus: ((_ isUpdating: Bool) -> ())?
 }
 
 extension WeatherViewModel {
     func getWeather() {
         isUpdating = true
+        print("\(name) is updating...")
         WeatherService().get(.weather, for: latLon, withModel: WeatherModel.self) { (result) in
             switch result {
             case .success(let payload):
@@ -57,6 +64,7 @@ extension WeatherViewModel {
                                                                   feelsLike: current.feelsLike)
                     self.isUpdating = false
                     self.didUpdateCurrentWeather?()
+                    self.delegate?.weather(self, didFinish: true)
 
                 }
                 if let forecast = payload?.data.forecast {
@@ -69,6 +77,10 @@ extension WeatherViewModel {
                     }
                 }
             case .failure(let error):
+                self.currentWeather = nil
+                self.isUpdating = false
+                self.didUpdateCurrentWeather?()
+                self.delegate?.weather(self, didFinish: true)
                 print(error)
             }
         }
