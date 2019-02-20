@@ -33,7 +33,6 @@ extension WeatherListViewModel {
         
         let newCity = WeatherViewModel(with: city.name, latitude: Double(city.latitude), longitude: Double(city.longitude))
         cities?.append(newCity)
-
     }
     
     func contains(_ city: CitySearchViewModel) -> Bool {
@@ -48,6 +47,5 @@ extension WeatherListViewModel {
                 city.getWeather()
             }
         }
-        
     }
 }

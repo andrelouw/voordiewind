@@ -3,11 +3,11 @@ import Foundation
 import UIKit
 
 protocol CitySearchTableViewControllerDelegate {
-    func addCity(_ tableView: AddCityTableViewController, didSelect city: CitySearchViewModel)
-    func addCity(_ tableView: AddCityTableViewController, shouldAdd city: CitySearchViewModel) -> Bool
+    func citySearch(_ tableView: CitySearchTableViewController, didSelect city: CitySearchViewModel)
+    func citySearch(_ tableView: CitySearchTableViewController, shouldAdd city: CitySearchViewModel) -> Bool
 }
 
-class AddCityTableViewController : UITableViewController {
+class CitySearchTableViewController : UITableViewController {
     let searchController = CustomSearchController(searchResultsController: nil) // nil -> use this view
     var delegate: CitySearchTableViewControllerDelegate?
     var viewModel = CitySearchListViewModel()
@@ -31,7 +31,7 @@ class AddCityTableViewController : UITableViewController {
     }
 }
 
-extension AddCityTableViewController {
+extension CitySearchTableViewController {
     private func setUpNavigationBar() {
         navigationItem.prompt = viewModel.navigationPrompt
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: viewModel.cancelButton, style: .plain, target: self, action: #selector(dismissViewController))
@@ -52,7 +52,7 @@ extension AddCityTableViewController {
 }
 
 // MARK: - Table view datasource
-extension AddCityTableViewController {
+extension CitySearchTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -71,11 +71,11 @@ extension AddCityTableViewController {
 }
 
 // MARK: - Table view delegate
-extension AddCityTableViewController {
+extension CitySearchTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let city = viewModel.city(for: indexPath.row) else { return }
-        if delegate?.addCity(self, shouldAdd: city) ?? false {
-            delegate?.addCity(self, didSelect: city)
+        if delegate?.citySearch(self, shouldAdd: city) ?? false {
+            delegate?.citySearch(self, didSelect: city)
             self.dismissViewController()
         } else {
             let alert = UIAlertController(title: "Kies 'n ander een", message: "Die stad is reeds in jou voer, of het jy vergeet?", preferredStyle: .alert)
@@ -87,14 +87,14 @@ extension AddCityTableViewController {
 }
 
 // MARK: - SearchController delegate
-extension AddCityTableViewController: UISearchResultsUpdating {
+extension CitySearchTableViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
          viewModel.search(for: searchController.searchBar.text)
     }
 }
 
 // MARK: - Binding
-extension AddCityTableViewController {
+extension CitySearchTableViewController {
     func setUpBinding() {
         viewModel.reloadTableViewClosure = { [weak self] () in
             DispatchQueue.main.async {
@@ -112,7 +112,7 @@ extension AddCityTableViewController {
 }
 
 // MARK: - Helpers
-extension AddCityTableViewController {
+extension CitySearchTableViewController {
     func delay(_ delay: Double, closure: @escaping ()->()) {
         let when = DispatchTime.now() + delay
         DispatchQueue.main.asyncAfter(deadline: when, execute: closure)

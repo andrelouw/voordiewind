@@ -6,7 +6,6 @@ struct CurrentWeatherViewModel {
 class WeatherViewModel {
     let name: String
     let latLon: String
-    // TODO: move to own struct
     var currentWeather: CurrentWeatherViewModel?
     
     private(set) var isUpdating: Bool = false {
@@ -39,7 +38,7 @@ class WeatherViewModel {
     var didUpdateCurrentWeather: (() -> ())?
     var updateLoadingStatus: ((_ isUpdating: Bool) -> ())?
 }
- 
+
 extension WeatherViewModel {
     func getWeather() {
         isUpdating = true

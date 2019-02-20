@@ -60,7 +60,7 @@ class WeatherListTableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         guard let nav = segue.destination as? UINavigationController,
-            let vc = nav.viewControllers.first as? AddCityTableViewController else { return }
+            let vc = nav.viewControllers.first as? CitySearchTableViewController else { return }
         
         vc.delegate = self
     }
@@ -69,13 +69,13 @@ class WeatherListTableViewController: UITableViewController {
 }
 
 extension WeatherListTableViewController: CitySearchTableViewControllerDelegate {
-    func addCity(_ tableView: AddCityTableViewController, didSelect city: CitySearchViewModel) {
+    func citySearch(_ tableView: CitySearchTableViewController, didSelect city: CitySearchViewModel) {
         viewModel.addCity(city)
         viewModel.updateWeatherList()
         self.tableView.reloadData()
     }
     
-    func addCity(_ tableView: AddCityTableViewController, shouldAdd city: CitySearchViewModel) -> Bool {
+    func citySearch(_ tableView: CitySearchTableViewController, shouldAdd city: CitySearchViewModel) -> Bool {
         return !viewModel.contains(city)
     }
 }
