@@ -41,7 +41,7 @@ class WeatherListTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let modifyAction = UIContextualAction(style: .normal, title:  "Delete", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+        let modifyAction = UIContextualAction(style: .normal, title: "Delete", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
             self.showDeleteAlert(for: indexPath)
             success(true)
         })
@@ -50,6 +50,13 @@ class WeatherListTableViewController: UITableViewController {
         modifyAction.title = "Verwyder"
         
         return UISwipeActionsConfiguration(actions: [modifyAction])
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let viewModel = self.viewModel.city(for: indexPath.row) {
+            let vc = WeatherDetailTableViewController(with: viewModel)
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -115,6 +122,16 @@ extension WeatherListTableViewController {
         alert.addAction(cancelAction)
         alert.addAction(okAction)
         self.present(alert, animated: true, completion: nil)
+    }
+}
+
+// MARK: - Weather detail
+extension WeatherListTableViewController {
+    func showDetail() {
+        let model = WeatherViewModel(with: "Welkom", latitude: 51.5171, longitude: -0.1062)
+        model.getWeather()
+        let vc = WeatherDetailTableViewController(with: model)
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 

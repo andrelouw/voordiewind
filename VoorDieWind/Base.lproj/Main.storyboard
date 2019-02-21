@@ -168,5 +168,69 @@
             </objects>
             <point key="canvasLocation" x="2430" y="223"/>
         </scene>
+        <!--Weather Detail Table View Controller-->
+        <scene sceneID="sHN-8g-ofi">
+            <objects>
+                <tableViewController id="xHa-KH-8rU" customClass="WeatherDetailTableViewController" customModule="VoorDieWind" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Fpg-U9-YdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="WeatherDetailCell" id="Eb2-TD-eQT" customClass="WeatherDetailCell" customModule="VoorDieWind" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Eb2-TD-eQT" id="UEa-8r-Nvz">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Uq2-Qg-xnI">
+                                            <rect key="frame" x="16" y="0.0" width="343" height="43.5"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="haS-Qd-iND">
+                                                    <rect key="frame" x="0.0" y="11.5" width="239" height="20.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ID8-MW-pdX">
+                                                    <rect key="frame" x="249" y="11.5" width="42" height="20.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LPb-q7-Jmj">
+                                                    <rect key="frame" x="301" y="11.5" width="42" height="20.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </stackView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottom" secondItem="Uq2-Qg-xnI" secondAttribute="bottom" id="IIe-Fs-E17"/>
+                                        <constraint firstItem="Uq2-Qg-xnI" firstAttribute="leading" secondItem="UEa-8r-Nvz" secondAttribute="leadingMargin" id="Ntx-dG-40L"/>
+                                        <constraint firstItem="Uq2-Qg-xnI" firstAttribute="top" secondItem="UEa-8r-Nvz" secondAttribute="top" id="daa-dd-oqO"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="Uq2-Qg-xnI" secondAttribute="trailing" id="kap-yj-RdB"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="dateLabel" destination="haS-Qd-iND" id="u7c-wc-XDG"/>
+                                    <outlet property="maxTemperatureLabel" destination="ID8-MW-pdX" id="hQD-7w-KfQ"/>
+                                    <outlet property="minTemperatureLabel" destination="LPb-q7-Jmj" id="AMT-qB-V6R"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="xHa-KH-8rU" id="JI8-7C-JMh"/>
+                            <outlet property="delegate" destination="xHa-KH-8rU" id="ZHQ-wt-m67"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7hj-Rs-GZq" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2458" y="986"/>
+        </scene>
     </scenes>
 </document>
