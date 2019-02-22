@@ -1,16 +1,22 @@
-//
-//  WeatherDetailTableViewCell.swift
-//  VoorDieWind
-//
-//  Created by Andre Louw on 2019/02/21.
-//  Copyright © 2019 Andre Louw. All rights reserved.
-//
-
 import UIKit
+
+struct WeatherDetailTableViewCellViewModel {
+    var date: String
+    var maxTemperature: String
+    var minTemperature: String
+    
+    var maxTemperatureDisplayString: String {
+        return "\(maxTemperature)°"
+    }
+    
+    var minTemperatureDisplayString: String {
+        return "\(minTemperature)°"
+    }
+}
 
 class WeatherDetailTableViewCell: UITableViewCell {
     @IBOutlet weak var dateLabel: UILabel!
-    @IBOutlet weak var maxTemperatrueLabel: UILabel!
+    @IBOutlet weak var maxTemperatureLabel: UILabel!
     @IBOutlet weak var minTemperatureLabel: UILabel!
     @IBOutlet weak var headingStackView: UIStackView!
     @IBOutlet weak var maxHeadingLabel: UILabel!
@@ -23,10 +29,12 @@ class WeatherDetailTableViewCell: UITableViewCell {
         
         maxHeadingLabel.text = "Max"
         minHeadingLabel.text = "Min"
-        dateLabel.text = "30 Jan 2019"
-        maxTemperatrueLabel.text = "30°"
-        minTemperatureLabel.text = "30°"
-        // Initialization code
+    }
+    
+    func setUpCell(with viewModel: WeatherDetailTableViewCellViewModel) {
+        dateLabel.text = viewModel.date
+        maxTemperatureLabel.text = viewModel.maxTemperatureDisplayString
+        minTemperatureLabel.text = viewModel.minTemperatureDisplayString
     }
     
     func shouldShowHeadings(_ show: Bool) {

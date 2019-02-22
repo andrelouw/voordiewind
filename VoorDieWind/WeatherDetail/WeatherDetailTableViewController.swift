@@ -19,7 +19,7 @@ class WeatherDetailTableViewController: UITableViewController {
         fatalError("init(coder:) has not been implemented")
     }
     override func viewDidLoad() {
-        title = viewModel?.name
+        title = viewModel?.cityName
         tableView.isUserInteractionEnabled = false
     }
     
@@ -27,9 +27,8 @@ class WeatherDetailTableViewController: UITableViewController {
         guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "WeatherDetailHeaderView") as? WeatherDetailHeaderView else {
             return UITableViewHeaderFooterView() }
         
-        
-        headerView.currentTemperatureLabel.text = "30°"
-        headerView.currentDateLabel.text = "30 Jan 2019"
+        headerView.currentTemperatureLabel.text = viewModel?.currentTemperature
+        headerView.currentDateLabel.text = viewModel?.currentWeatherDate
         return headerView
     }
     
@@ -42,19 +41,20 @@ class WeatherDetailTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return viewModel?.numberOfRows ?? 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherDetailTableViewCell", for: indexPath) as? WeatherDetailTableViewCell else {
-                return UITableViewCell()
-            }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherDetailTableViewCell", for: indexPath) as? WeatherDetailTableViewCell,
+            let cellViewModel = viewModel?.forecastDay(for: indexPath.row)
+            else { return UITableViewCell() }
+        
+        cell.setUpCell(with: cellViewModel)
         
         if indexPath.row > 0 {
             cell.shouldShowHeadings(false)
-        } else {
-            cell.dateLabel.text = "Today"
         }
+        
         return cell
     }
     

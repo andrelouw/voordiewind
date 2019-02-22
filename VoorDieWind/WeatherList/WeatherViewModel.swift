@@ -3,12 +3,6 @@ struct CurrentWeatherViewModel {
     var feelsLike: String?
 }
 
-struct ForecastWeatherViewModel {
-    var date: String
-    var maxTemperature: String
-    var minTemperature: String
-}
-
 protocol WeatherViewModelDelegate {
     func weather(_ viewModel: WeatherViewModel, didFinish update: Bool)
 }
