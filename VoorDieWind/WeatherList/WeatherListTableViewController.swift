@@ -23,11 +23,11 @@ class WeatherListTableViewController: UITableViewController {
             tableView.backgroundView  = nil
             tableView.separatorStyle  = .singleLine
         } else {
-            let noDataLabel: UILabel     = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
-            noDataLabel.text          = "No data available"
-            noDataLabel.textColor     = UIColor.black
-            noDataLabel.textAlignment = .center
-            tableView.backgroundView  = noDataLabel
+//            let noDataLabel: UILabel     = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
+//            noDataLabel.text          = "No data available"
+//            noDataLabel.textColor     = UIColor.black
+//            noDataLabel.textAlignment = .center
+            tableView.backgroundView  = NoDataView()
             tableView.separatorStyle  = .none
         }
         return viewModel.numberOfRows
