@@ -11,12 +11,21 @@ class CitySearchTableViewController : UITableViewController {
     let searchController = CustomSearchController(searchResultsController: nil) // nil -> use this view
     var delegate: CitySearchTableViewControllerDelegate?
     var viewModel = CitySearchListViewModel()
+    var noDataView: NoDataView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpNavigationBar()
         setUpSearchController()
         setUpBinding()
+        
+        // TODO: Mvoe to VM
+        noDataView = NoDataView(with: "Geen stede?",
+                                message: "Soek jou stad in die soek paneel",
+                                image: UIImage(named: "city") ?? UIImage(),
+                                buttonTitle: nil,
+                                shouldShowButton: false,
+                                buttonHandler: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -62,11 +71,7 @@ extension CitySearchTableViewController {
             tableView.backgroundView  = nil
             tableView.separatorStyle  = .singleLine
         } else {
-            let noDataLabel: UILabel     = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
-            noDataLabel.text          = "No data available"
-            noDataLabel.textColor     = UIColor.black
-            noDataLabel.textAlignment = .center
-            tableView.backgroundView  = noDataLabel
+            tableView.backgroundView  = noDataView
             tableView.separatorStyle  = .none
         }
         return viewModel.numberOfRows

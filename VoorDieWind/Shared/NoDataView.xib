@@ -13,6 +13,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NoDataView" customModule="VoorDieWind" customModuleProvider="target">
             <connections>
                 <outlet property="imageView" destination="IKF-Y8-BKH" id="7oq-6u-Pl6"/>
+                <outlet property="noDataButton" destination="Ta6-nD-Rxz" id="qAL-Ba-3Aj"/>
                 <outlet property="noDataMessageLabel" destination="JLr-bM-KsJ" id="0eE-RZ-Vne"/>
                 <outlet property="noDataTitleLabel" destination="p9V-BL-25l" id="EmD-pA-RtV"/>
             </connections>
@@ -43,10 +44,18 @@
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ta6-nD-Rxz">
+                            <rect key="frame" x="149.5" y="482" width="46" height="30"/>
+                            <state key="normal" title="Button"/>
+                            <connections>
+                                <action selector="noDataButtonTapped:" destination="-1" eventType="touchUpInside" id="yMx-xB-thw"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="JLr-bM-KsJ" firstAttribute="centerX" secondItem="DEq-4l-q2i" secondAttribute="centerX" id="2i5-PR-Z30"/>
+                        <constraint firstItem="Ta6-nD-Rxz" firstAttribute="top" secondItem="JLr-bM-KsJ" secondAttribute="bottom" constant="20" id="9Zd-g2-Q3Q"/>
                         <constraint firstAttribute="trailing" secondItem="p9V-BL-25l" secondAttribute="trailing" id="BiX-ek-CMB"/>
                         <constraint firstItem="IKF-Y8-BKH" firstAttribute="centerX" secondItem="DEq-4l-q2i" secondAttribute="centerX" id="CCd-YD-OIl"/>
                         <constraint firstItem="p9V-BL-25l" firstAttribute="top" secondItem="IKF-Y8-BKH" secondAttribute="bottom" constant="20" id="HNE-vt-dkK"/>
@@ -54,6 +63,7 @@
                         <constraint firstItem="p9V-BL-25l" firstAttribute="centerX" secondItem="DEq-4l-q2i" secondAttribute="centerX" id="Xbx-Wk-da5"/>
                         <constraint firstAttribute="trailing" secondItem="JLr-bM-KsJ" secondAttribute="trailing" id="aJ1-gI-n97"/>
                         <constraint firstItem="IKF-Y8-BKH" firstAttribute="leading" secondItem="DEq-4l-q2i" secondAttribute="leadingMargin" id="dl0-B9-5bi"/>
+                        <constraint firstItem="Ta6-nD-Rxz" firstAttribute="centerX" secondItem="DEq-4l-q2i" secondAttribute="centerX" id="fnz-yP-QOA"/>
                         <constraint firstAttribute="trailingMargin" secondItem="IKF-Y8-BKH" secondAttribute="trailing" id="g7v-hO-Gc3"/>
                         <constraint firstItem="JLr-bM-KsJ" firstAttribute="top" secondItem="p9V-BL-25l" secondAttribute="bottom" constant="10" id="nWH-Kj-qCS"/>
                         <constraint firstItem="JLr-bM-KsJ" firstAttribute="leading" secondItem="DEq-4l-q2i" secondAttribute="leading" id="sh7-N8-xI1"/>

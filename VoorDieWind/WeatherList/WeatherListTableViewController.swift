@@ -3,6 +3,7 @@ import UIKit
 
 class WeatherListTableViewController: UITableViewController {
     var viewModel = WeatherListViewModel()
+    var noDataView: UIView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -10,8 +11,17 @@ class WeatherListTableViewController: UITableViewController {
         title = "Voor die wind"
         self.navigationController?.navigationBar.prefersLargeTitles = true
         viewModel.delegate = self
+        
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(handleRefresh(_:)), for: .valueChanged)
+        
+        // TODO: To VM
+        noDataView = NoDataView(with: "Geen stede in jou voer?",
+                                message: "Wil jy nie dalk soek vir jou gunsteling stad nie?",
+                                image: UIImage(named: "umbrella") ?? UIImage(),
+                                buttonTitle: "Soek 'n stad") { [weak self] in
+            self?.showAddCity()
+        }
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -23,11 +33,7 @@ class WeatherListTableViewController: UITableViewController {
             tableView.backgroundView  = nil
             tableView.separatorStyle  = .singleLine
         } else {
-//            let noDataLabel: UILabel     = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
-//            noDataLabel.text          = "No data available"
-//            noDataLabel.textColor     = UIColor.black
-//            noDataLabel.textAlignment = .center
-            tableView.backgroundView  = NoDataView()
+            tableView.backgroundView  = noDataView
             tableView.separatorStyle  = .none
         }
         return viewModel.numberOfRows
