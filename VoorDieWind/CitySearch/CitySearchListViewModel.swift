@@ -33,6 +33,15 @@ extension CitySearchListViewModel {
         return 0
     }
     
+    func isUserInteractionEnabled(for indexPath: IndexPath) -> Bool {
+        if shouldShowErrorMessage {
+            return false
+        } else if let _ = cities?[indexPath.row] {
+            return true
+        }
+        return false
+    }
+    
     func city(for row: Int) -> CitySearchViewModel? {
         if !shouldShowErrorMessage, let city = cities?[row] {
             return city

@@ -3,9 +3,7 @@ import UIKit
 
 class WeatherDetailTableViewController: UITableViewController {
     var viewModel: WeatherDetailViewModel?
-    
-    
-    
+
     init(with model: WeatherViewModel) {
         super.init(style: .plain)
         viewModel = WeatherDetailViewModel(with: model)
@@ -22,6 +20,7 @@ class WeatherDetailTableViewController: UITableViewController {
     }
     override func viewDidLoad() {
         title = viewModel?.name
+        tableView.isUserInteractionEnabled = false
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

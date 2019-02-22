@@ -19,6 +19,17 @@ class WeatherListTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if viewModel.numberOfRows > 0 {
+            tableView.backgroundView  = nil
+            tableView.separatorStyle  = .singleLine
+        } else {
+            let noDataLabel: UILabel     = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
+            noDataLabel.text          = "No data available"
+            noDataLabel.textColor     = UIColor.black
+            noDataLabel.textAlignment = .center
+            tableView.backgroundView  = noDataLabel
+            tableView.separatorStyle  = .none
+        }
         return viewModel.numberOfRows
     }
     
@@ -30,6 +41,10 @@ class WeatherListTableViewController: UITableViewController {
         
         cell.setUpCell(with: weatherViewModel)
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return UIView()
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -53,6 +68,7 @@ class WeatherListTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         if let viewModel = self.viewModel.city(for: indexPath.row) {
             let vc = WeatherDetailTableViewController(with: viewModel)
             navigationController?.pushViewController(vc, animated: true)
