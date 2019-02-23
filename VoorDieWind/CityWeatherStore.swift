@@ -16,7 +16,7 @@ class CityWeatherModel {
 }
 
 class CityWeatherStore {
-    private var cityWeatherList: [CityWeatherModel]
+    private(set) var cityWeatherList: [CityWeatherModel]
     typealias UpdateWeatherCompletion = (_ cityWeather: CityWeatherModel?) -> Void
     
     static let shared = CityWeatherStore()
@@ -33,9 +33,9 @@ extension CityWeatherStore {
         cityWeatherList.append(cityWeather)
     }
     
-    func remove(_ identifier: String) {
-        guard let index = index(for: identifier) else {return}
-        cityWeatherList.remove(at: index)
+    func remove(_ identifier: String) -> CityWeatherModel? {
+        guard let index = index(for: identifier) else {return nil}
+        return cityWeatherList.remove(at: index)
     }
     
     var numberOfCities: Int {

@@ -8,7 +8,9 @@ protocol WeatherListViewModelDelegate {
 }
 
 class WeatherListViewModel {
-    var cities: [CityModel]?
+    var cities: [CityWeatherModel] {
+        return CityWeatherStore.shared.cityWeatherList
+    }
     var delegate: WeatherListViewModelDelegate?
 }
 
@@ -16,21 +18,14 @@ class WeatherListViewModel {
 extension WeatherListViewModel {
     
     var numberOfRows: Int {
-        return cities?.count ?? 0
+        return cities.count
     }
     
     func cityWeather(for indexPath: IndexPath) -> CityWeatherModel? {
-        guard let city = cities?[indexPath.row] else { return nil }
-        return CityWeatherStore.shared.cityWeather(for: city.identifier)
+        return cities[safe: indexPath.row]
     }
     
     func addCity(_ city: CityModel) {
-        if cities == nil {
-            cities = []
-        }
-        
-        cities?.append(city)
-        
         // Not sure where this should happen
         let cityWeather = CityWeatherModel(city: city, currentWeather: nil, forecastWeather: nil)
         CityWeatherStore.shared.add(cityWeather)
@@ -39,24 +34,23 @@ extension WeatherListViewModel {
 
 extension WeatherListViewModel {
     func removeCity(at indexPath: IndexPath) {
-        if let city = cities?.remove(at: indexPath.row) {
-            CityWeatherStore.shared.remove(city.identifier)
-            delegate?.weatherList(self, didRemove: indexPath)
-        }
+        guard let city = cities[safe: indexPath.row],
+            let _ = CityWeatherStore.shared.remove(city.id) else { return }
+        delegate?.weatherList(self, didRemove: indexPath)
     }
 }
 
 // MARK: - Update all weather
 extension WeatherListViewModel {
     func updateWeatherList() {
-        if let cities = cities, cities.count > 0 {
-            for city in cities {
+//        if let cities = cities, cities.count > 0 {
+//            for city in cities {
                 // TODO: Fix this!!!
 //                city.getWeather()
-            }
-        } else {
-            delegate?.weatherList(self, didFinishUpdate: true)
-        }
+//            }
+//        } else {
+//            delegate?.weatherList(self, didFinishUpdate: true)
+//        }
     }
 }
 
@@ -77,3 +71,5 @@ extension WeatherListViewModel {
 //        }
 //    }
 //}
+
+

@@ -34,6 +34,7 @@
 		65AA40B722214C41003BE907 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AA40B622214C41003BE907 /* DateFormatter.swift */; };
 		65AA40B92221675A003BE907 /* Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AA40B82221675A003BE907 /* Decoder.swift */; };
 		65AA40BB22216F5F003BE907 /* CityWeatherStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AA40BA22216F5F003BE907 /* CityWeatherStore.swift */; };
+		65AA40BD2221C9BD003BE907 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AA40BC2221C9BD003BE907 /* Array.swift */; };
 		65B2D543221F364800FEB0FE /* WeatherDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B2D541221F364800FEB0FE /* WeatherDetailTableViewCell.swift */; };
 		65B2D544221F364800FEB0FE /* WeatherDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 65B2D542221F364800FEB0FE /* WeatherDetailTableViewCell.xib */; };
 		65F0622422181BA4009153DA /* WebService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F0622322181BA4009153DA /* WebService.swift */; };
@@ -70,6 +71,7 @@
 		65AA40B622214C41003BE907 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		65AA40B82221675A003BE907 /* Decoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decoder.swift; sourceTree = "<group>"; };
 		65AA40BA22216F5F003BE907 /* CityWeatherStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityWeatherStore.swift; sourceTree = "<group>"; };
+		65AA40BC2221C9BD003BE907 /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		65B2D541221F364800FEB0FE /* WeatherDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDetailTableViewCell.swift; sourceTree = "<group>"; };
 		65B2D542221F364800FEB0FE /* WeatherDetailTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WeatherDetailTableViewCell.xib; sourceTree = "<group>"; };
 		65F0622322181BA4009153DA /* WebService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebService.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 				654F000722198061003CD137 /* Dictionary.swift */,
 				654F000922199056003CD137 /* UISearchBar.swift */,
 				65A19688221F0F500020225C /* UIView.swift */,
+				65AA40BC2221C9BD003BE907 /* Array.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -281,6 +284,7 @@
 				654F000F22199233003CD137 /* WeatherListTableViewController.swift in Sources */,
 				654F000822198061003CD137 /* Dictionary.swift in Sources */,
 				65F0622422181BA4009153DA /* WebService.swift in Sources */,
+				65AA40BD2221C9BD003BE907 /* Array.swift in Sources */,
 				654F000E22199233003CD137 /* WeatherListCell.swift in Sources */,
 				654F000A22199056003CD137 /* UISearchBar.swift in Sources */,
 				654FFFFF22197F10003CD137 /* CitySearchTableViewController.swift in Sources */,
