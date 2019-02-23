@@ -3,14 +3,8 @@ protocol WeatherViewModelDelegate {
     func weather(_ viewModel: WeatherListCellViewModel, didFinish update: Bool)
 }
 
-
-
 class WeatherListCellViewModel {
     let cityWeather: CityWeatherModel
-//    private(set) var name: String
-//    private(set) var latLon: String
-//    private(set) var currentWeather: CurrentWeatherModel?
-//    private(set) var forecastWeather: [ForecastWeatherModel]?
     var delegate: WeatherViewModelDelegate?
     
     private(set) var isUpdating: Bool = false {
@@ -19,8 +13,27 @@ class WeatherListCellViewModel {
         }
     }
     
+    var didUpdateCurrentWeather: (() -> ())?
+    var updateWeatherLoadingStatus: ((_ isUpdating: Bool) -> ())?
+    
     init(with cityWeather: CityWeatherModel) {
         self.cityWeather = cityWeather
+        if cityWeather.currentWeather == nil {
+            isUpdating = true
+            CityWeatherStore.shared.updateWeather(for: cityWeather.id) { [weak self] result in
+                self?.cityWeather.currentWeather = result?.currentWeather
+                self?.cityWeather.forecastWeather = result?.forecastWeather
+                self?.isUpdating = false
+                self?.didUpdateCurrentWeather?()
+            }
+        }
+    }
+}
+
+// MARK: - Labels
+extension WeatherListCellViewModel {
+    var cityName: String {
+        return cityWeather.city.name
     }
     
     var temperature: String? {
@@ -38,54 +51,4 @@ class WeatherListCellViewModel {
             return nil
         }
     }
-    
-    var didUpdateCurrentWeather: (() -> ())?
-    var updateWeatherLoadingStatus: ((_ isUpdating: Bool) -> ())?
-}
-
-extension WeatherListCellViewModel {
-//    func getWeather() {
-//        isUpdating = true
-//        print("\(name) is updating...")
-//        WeatherService().get(.weather, for: latLon, withModel: WeatherModel.self) { [weak self] (result) in
-//            switch result {
-//            case .success(let payload):
-//                self?.handleSuccess(with: payload)
-//            case .failure(let error):
-//               self?.handleFailure(with: error)
-//            }
-//        }
-//    }
-//
-//    private func handleSuccess(with payload: WeatherModel?) {
-//        guard let current = payload?.data.current.first,
-//            let forecast = payload?.data.forecast
-//        else {
-//            // TODO: What do we do here?
-//            return
-//        }
-//        self.currentWeather = current
-//        
-//        self.forecastWeather = []
-//        for day in forecast {
-//            let weather = ForecastWeatherModel(date: day.date,
-//                                               maxTemperature: day.maxTemperature,
-//                                               minTemperature: day.minTemperature)
-//            self.forecastWeather?.append(weather)
-//        }
-//        
-//        self.isUpdating = false
-//        self.didUpdateCurrentWeather?()
-//        self.delegate?.weather(self, didFinish: true)
-//    }
-//
-//    private func handleFailure(with error: WebServiceFailure?) {
-//        self.currentWeather = nil
-//        self.forecastWeather = nil
-//        
-//        self.isUpdating = false
-//        self.didUpdateCurrentWeather?()
-//        self.delegate?.weather(self, didFinish: true)
-//        print(error)
-//    }
 }

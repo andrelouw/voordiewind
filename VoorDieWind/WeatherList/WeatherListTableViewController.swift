@@ -64,9 +64,6 @@ extension WeatherListTableViewController {
         return cell
     }
     
-  
-    
-    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        tableView.deselectRow(at: indexPath, animated: true)
 //        if let viewModel = self.viewModel.city(for: indexPath.row) {
