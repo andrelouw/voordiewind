@@ -4,7 +4,7 @@ import Foundation
 
 protocol WeatherListViewModelDelegate {
     func weatherList(_ viewModel: WeatherListViewModel, didFinishUpdate: Bool)
-    func weatherList(_ viewModel: WeatherListViewModel, didRemove row: Int)
+    func weatherList(_ viewModel: WeatherListViewModel, didRemove indexPath: IndexPath)
 }
 
 class WeatherListViewModel {
@@ -38,10 +38,10 @@ extension WeatherListViewModel {
 }
 
 extension WeatherListViewModel {
-    func removeCity(at row: Int) {
-        if let city = cities?.remove(at: row) {
+    func removeCity(at indexPath: IndexPath) {
+        if let city = cities?.remove(at: indexPath.row) {
             CityWeatherStore.shared.remove(city.identifier)
-            delegate?.weatherList(self, didRemove: row)
+            delegate?.weatherList(self, didRemove: indexPath)
         }
     }
 }
