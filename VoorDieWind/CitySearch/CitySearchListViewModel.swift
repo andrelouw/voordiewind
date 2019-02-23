@@ -3,7 +3,8 @@ import Foundation
 class CitySearchListViewModel {
     typealias CitySearchResultType = CitySearchModel
     
-    private var cities: [CitySearchViewModel]? {
+    // TODO: Make closures
+    private var cities: [CityModel]? {
         didSet {
             self.reloadTableViewClosure?()
         }
@@ -17,6 +18,7 @@ class CitySearchListViewModel {
     
     private var errorMessage: String?
     
+    // TODO: Make closures
     // binding closures
     var reloadTableViewClosure: (() -> ())?
     var updateLoadingStatus: ((_ isLoading: Bool) -> ())?
@@ -42,7 +44,7 @@ extension CitySearchListViewModel {
         return false
     }
     
-    func city(for row: Int) -> CitySearchViewModel? {
+    func city(for row: Int) -> CityModel? {
         if !shouldShowErrorMessage, let city = cities?[row] {
             return city
         }
@@ -92,16 +94,10 @@ extension CitySearchListViewModel {
 
 // MARK: - Cities
 extension CitySearchListViewModel {
-    private func updateCities(with model: CitySearchModel) {
+    private func addCities(from searchModel: CitySearchModel) {
         cities = []
-        for city in model.search.results {
-            if let name = city.name.first?["value"],
-                let region = city.region.first?["value"],
-                let country = city.country.first?["value"],
-                let latitude = Double(city.latitude),
-                let longitude = Double(city.longitude) {
-                cities?.append(CitySearchViewModel(name: name, region: region, country: country, latitude: latitude, longitude: longitude))
-            }
+        for city in searchModel.search.results {
+                cities?.append(city)
         }
     }
     
@@ -126,7 +122,7 @@ extension CitySearchListViewModel {
     private func handleSearchSuccess(with payload: CitySearchResultType?) {
         if let knownPayload = payload {
             errorMessage = nil
-            updateCities(with: knownPayload)
+            addCities(from: knownPayload)
         } else {
             errorMessage = noDataMessage
             resetCities()
@@ -185,7 +181,8 @@ extension CitySearchListViewModel {
 
 // MARK: - Strings
 extension CitySearchListViewModel {
-    private func subtitle(for city: CitySearchViewModel?) -> String? {
+    private func subtitle(for city: CityModel?) -> String? {
+        // TODO: what if country/city is nil?
         if let city = city {
             return "\(city.region) • \(city.country)"
         }

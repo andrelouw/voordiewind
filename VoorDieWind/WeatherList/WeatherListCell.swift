@@ -12,7 +12,7 @@ class WeatherListCell: UITableViewCell {
     
     func setUpCell(with viewModel: WeatherListCellViewModel) {
         self.viewModel = viewModel
-        self.cityNameLabel.text = viewModel.name
+        self.cityNameLabel.text = viewModel.cityWeather.city.name
         
         if viewModel.isUpdating {
             self.temperatureLabel.isHidden = true

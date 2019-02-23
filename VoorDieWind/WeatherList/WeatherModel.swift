@@ -3,6 +3,14 @@ import Foundation
 struct WeatherModel: Decodable {
     let data: WeatherDataModel
     
+    var current: CurrentWeatherModel? {
+        return data.current.first
+    }
+    
+    var forecast: [ForecastWeatherModel] {
+        return data.forecast
+    }
+    
     private enum CodingKeys: String, CodingKey {
         case data = "data"
     }

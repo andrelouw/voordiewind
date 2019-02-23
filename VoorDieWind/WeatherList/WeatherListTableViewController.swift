@@ -39,15 +39,7 @@ class WeatherListTableViewController: UITableViewController {
         return viewModel.numberOfRows
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherCell", for: indexPath) as? WeatherListCell,
-            let weatherViewModel = viewModel.weatherViewModel(for: indexPath.row)
-        else { return UITableViewCell() }
-        
-        cell.setUpCell(with: weatherViewModel)
-        return cell
-    }
+    
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return UIView()
@@ -59,6 +51,31 @@ class WeatherListTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
+    }
+    
+   
+  
+   
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        guard let nav = segue.destination as? UINavigationController,
+            let vc = nav.viewControllers.first as? CitySearchTableViewController else { return }
+        
+        vc.delegate = self
+    }
+}
+
+
+// MARK: - Cells
+extension WeatherListTableViewController {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherCell", for: indexPath) as? WeatherListCell,
+            let cityWeather = viewModel.cityWeather(for: indexPath)
+            else { return UITableViewCell() }
+        
+        let cellViewModel = WeatherListCellViewModel(with: cityWeather)
+        cell.setUpCell(with: cellViewModel)
+        return cell
     }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -73,21 +90,15 @@ class WeatherListTableViewController: UITableViewController {
         return UISwipeActionsConfiguration(actions: [modifyAction])
     }
     
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        if let viewModel = self.viewModel.city(for: indexPath.row) {
-            let vc = WeatherDetailTableViewController(with: viewModel)
-            navigationController?.pushViewController(vc, animated: true)
-        }
+//        tableView.deselectRow(at: indexPath, animated: true)
+//        if let viewModel = self.viewModel.city(for: indexPath.row) {
+//            let vc = WeatherDetailTableViewController(with: viewModel)
+//            navigationController?.pushViewController(vc, animated: true)
+//        }
     }
-   
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        guard let nav = segue.destination as? UINavigationController,
-            let vc = nav.viewControllers.first as? CitySearchTableViewController else { return }
-        
-        vc.delegate = self
-    }
+    
 }
 
 // MARK: - City search
@@ -97,13 +108,9 @@ extension WeatherListTableViewController: CitySearchTableViewControllerDelegate 
         performSegue(withIdentifier: "showAddCity", sender: self)
     }
     
-    func citySearch(_ tableView: CitySearchTableViewController, didSelect city: CitySearchViewModel) {
-        viewModel.addCity(city)
-        self.tableView.reloadData()
-    }
-    
-    func citySearch(_ tableView: CitySearchTableViewController, shouldAdd city: CitySearchViewModel) -> Bool {
-        return !viewModel.contains(city)
+    func citySearch(_ tableView: CitySearchTableViewController, didSelect city: CityModel) {
+            viewModel.addCity(city)
+            self.tableView.reloadData()
     }
 }
 
@@ -150,10 +157,10 @@ extension WeatherListTableViewController {
 // MARK: - Weather detail
 extension WeatherListTableViewController {
     func showDetail() {
-        let model = WeatherListCellViewModel(with: "Welkom", latitude: 51.5171, longitude: -0.1062)
-        model.getWeather()
-        let vc = WeatherDetailTableViewController(with: model)
-        navigationController?.pushViewController(vc, animated: true)
+//        let model = WeatherListCellViewModel(with: "Welkom", latitude: 51.5171, longitude: -0.1062)
+//        model.getWeather()
+//        let vc = WeatherDetailTableViewController(with: model)
+//        navigationController?.pushViewController(vc, animated: true)
     }
 }
 

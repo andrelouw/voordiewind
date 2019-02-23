@@ -13,13 +13,6 @@ final class WeatherService {
     let format = "json"
 }
 
-// MARK: - Convenience get with single query
-extension WeatherService {
-    func get<ResultType: Decodable>(_ path: WeatherServicePath, for query: String, withModel resultType: ResultType.Type, completion: @escaping GetCompletion<ResultType>) {
-        get(path, for: ["query": query], withModel: resultType, completion: completion)
-    }
-}
-
 // MARK: - Get query
 extension WeatherService {
     func get<ResultType: Decodable>(_ path: WeatherServicePath, for parameters: JSON, withModel resultType: ResultType.Type, completion: @escaping GetCompletion<ResultType>) {
@@ -34,6 +27,17 @@ extension WeatherService {
                 completion(result)
             }
         }
+    }
+}
+
+// MARK: - Convenience
+extension WeatherService {
+    func get<ResultType: Decodable>(_ path: WeatherServicePath, for query: String, withModel resultType: ResultType.Type, completion: @escaping GetCompletion<ResultType>) {
+        get(path, for: ["query": query], withModel: resultType, completion: completion)
+    }
+    
+    func weather(for city: CityModel, completion: @escaping GetCompletion<WeatherModel>) {
+        WeatherService().get(.weather, for: city.identifier, withModel: WeatherModel.self, completion: completion)
     }
 }
 

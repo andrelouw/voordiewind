@@ -45,17 +45,18 @@ class WeatherDetailTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherDetailTableViewCell", for: indexPath) as? WeatherDetailTableViewCell,
-            let cellViewModel = viewModel?.forecastDay(for: indexPath.row)
-            else { return UITableViewCell() }
-        
-        cell.setUpCell(with: cellViewModel)
-        
-        if indexPath.row > 0 {
-            cell.shouldShowHeadings(false)
-        }
-        
-        return cell
+        return UITableViewCell()
+//        guard let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherDetailTableViewCell", for: indexPath) as? WeatherDetailTableViewCell,
+//            let cellViewModel = viewModel?.forecastDay(for: indexPath.row)
+//            else { return UITableViewCell() }
+//
+//        cell.setUpCell(with: cellViewModel)
+//
+//        if indexPath.row > 0 {
+//            cell.shouldShowHeadings(false)
+//        }
+//
+//        return cell
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

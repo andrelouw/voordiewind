@@ -7,12 +7,12 @@ class WeatherDetailViewModel {
     private var weatherForecast: [WeatherDetailTableViewCellViewModel]?
     
     init(with model: WeatherListCellViewModel) {
-        self.cityName = model.name
-        self.temperature = model.currentWeather?.temperature
-        self.date = model.forecastWeather?.first?.date
-        if let weather = model.forecastWeather {
-            pepareForecast(for: weather)
-        }
+        self.cityName = ""
+        self.temperature = nil
+        self.date = nil
+//        if let weather = model.forecastWeather {
+//            pepareForecast(for: weather)
+//        }
     }
     
     var numberOfRows: Int {
@@ -37,18 +37,18 @@ class WeatherDetailViewModel {
         return nil
     }
     
-    func pepareForecast(for weatherForecastList: [ForecastWeatherModel]) {
-        self.weatherForecast = []
-        for (index, forecast) in weatherForecastList.enumerated() {
-            if index < 7 {
-                self.weatherForecast?.append(WeatherDetailTableViewCellViewModel(date: forecast.date,
-                                                                                 maxTemperature: forecast.maxTemperature,
-                                                                                 minTemperature: forecast.minTemperature))
-            } else {
-                break
-            }
-        }
-    }
+//    func pepareForecast(for weatherForecastList: [ForecastWeatherModel]) {
+//        self.weatherForecast = []
+//        for (index, forecast) in weatherForecastList.enumerated() {
+//            if index < 7 {
+//                self.weatherForecast?.append(WeatherDetailTableViewCellViewModel(date: forecast.date,
+//                                                                                 maxTemperature: forecast.maxTemperature,
+//                                                                                 minTemperature: forecast.minTemperature))
+//            } else {
+//                break
+//            }
+//        }
+//    }
     
     func forecastDay(for day: Int) -> WeatherDetailTableViewCellViewModel? {
         if let forecast = weatherForecast?[day] {

@@ -3,8 +3,7 @@ import Foundation
 import UIKit
 
 protocol CitySearchTableViewControllerDelegate {
-    func citySearch(_ tableView: CitySearchTableViewController, didSelect city: CitySearchViewModel)
-    func citySearch(_ tableView: CitySearchTableViewController, shouldAdd city: CitySearchViewModel) -> Bool
+    func citySearch(_ tableView: CitySearchTableViewController, didSelect city: CityModel)
 }
 
 class CitySearchTableViewController : UITableViewController {
@@ -95,8 +94,10 @@ extension CitySearchTableViewController {
 extension CitySearchTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
         guard let city = viewModel.city(for: indexPath.row) else { return }
-        if delegate?.citySearch(self, shouldAdd: city) ?? false {
+        
+        if !CityWeatherStore.shared.contains(city.identifier) {
             delegate?.citySearch(self, didSelect: city)
             self.dismissViewController()
         } else {
@@ -106,7 +107,6 @@ extension CitySearchTableViewController {
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
         }
-        
     }
 }
 
