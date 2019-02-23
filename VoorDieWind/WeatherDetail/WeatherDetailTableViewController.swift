@@ -4,9 +4,9 @@ import UIKit
 class WeatherDetailTableViewController: UITableViewController {
     var viewModel: WeatherDetailViewModel?
 
-    init(with model: WeatherListCellViewModel) {
+    init(with viewModel: WeatherDetailViewModel) {
         super.init(style: .plain)
-        viewModel = WeatherDetailViewModel(with: model)
+        self.viewModel = viewModel
         
         let headerNib = UINib.init(nibName: "WeatherDetailHeaderView", bundle: Bundle.main)
         tableView.register(headerNib, forHeaderFooterViewReuseIdentifier: "WeatherDetailHeaderView")
@@ -45,18 +45,17 @@ class WeatherDetailTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
-//        guard let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherDetailTableViewCell", for: indexPath) as? WeatherDetailTableViewCell,
-//            let cellViewModel = viewModel?.forecastDay(for: indexPath.row)
-//            else { return UITableViewCell() }
-//
-//        cell.setUpCell(with: cellViewModel)
-//
-//        if indexPath.row > 0 {
-//            cell.shouldShowHeadings(false)
-//        }
-//
-//        return cell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherDetailTableViewCell", for: indexPath) as? WeatherDetailTableViewCell,
+            let model = viewModel?.forecast(for: indexPath) else { return UITableViewCell() }
+        
+        let cellViewModel = WeatherDetailCellViewModel(with: model)
+        cell.setUpCell(with: cellViewModel)
+
+        if indexPath.row > 0 {
+            cell.shouldShowHeadings(false)
+        }
+
+        return cell
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

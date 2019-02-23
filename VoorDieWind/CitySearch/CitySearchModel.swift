@@ -22,7 +22,7 @@ struct CityModel: Decodable {
     let latitude: Double
     
     var identifier: String {
-        return "\(longitude),\(latitude)"
+        return "\(latitude),\(longitude)"
     }
     
     private enum CodingKeys: String, CodingKey {

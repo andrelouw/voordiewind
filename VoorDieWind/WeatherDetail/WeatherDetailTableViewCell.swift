@@ -1,24 +1,24 @@
 import UIKit
 
 // TODO: Move to own file
-struct WeatherDetailTableViewCellViewModel {
-    private var cityWeather: CityWeatherModel
+struct WeatherDetailCellViewModel {
+    private var forecast: ForecastWeatherModel
     
-    init(with cityWeather: CityWeatherModel) {
-        self.cityWeather = cityWeather
+    init(with forecast: ForecastWeatherModel) {
+        self.forecast = forecast
     }
     
-//    var day: String {
-//        return WeatherDate().weekDay(from: date)
-//    }
-//
-//    var maxTemperatureDisplayString: String {
-//        return "\(maxTemperature)°"
-//    }
-//
-//    var minTemperatureDisplayString: String {
-//        return "\(minTemperature)°"
-//    }
+    var day: String {
+        return WeatherDate().weekDay(from: forecast.date)
+    }
+
+    var maxTemperatureDisplayString: String {
+        return "\(forecast.maxTemperature)°"
+    }
+
+    var minTemperatureDisplayString: String {
+        return "\(forecast.minTemperature)°"
+    }
 }
 
 class WeatherDetailTableViewCell: UITableViewCell {
@@ -38,10 +38,10 @@ class WeatherDetailTableViewCell: UITableViewCell {
         minHeadingLabel.text = "Min"
     }
     
-    func setUpCell(with viewModel: CityWeatherModel) {
-//        dateLabel.text = viewModel.day
-//        maxTemperatureLabel.text = viewModel.maxTemperatureDisplayString
-//        minTemperatureLabel.text = viewModel.minTemperatureDisplayString
+    func setUpCell(with viewModel: WeatherDetailCellViewModel) {
+        dateLabel.text = viewModel.day
+        maxTemperatureLabel.text = viewModel.maxTemperatureDisplayString
+        minTemperatureLabel.text = viewModel.minTemperatureDisplayString
     }
     
     func shouldShowHeadings(_ show: Bool) {

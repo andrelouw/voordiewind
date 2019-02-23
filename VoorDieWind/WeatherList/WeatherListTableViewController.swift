@@ -68,11 +68,12 @@ extension WeatherListTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        tableView.deselectRow(at: indexPath, animated: true)
-//        if let viewModel = self.viewModel.city(for: indexPath.row) {
-//            let vc = WeatherDetailTableViewController(with: viewModel)
-//            navigationController?.pushViewController(vc, animated: true)
-//        }
+        tableView.deselectRow(at: indexPath, animated: true)
+        if let cityWeather = self.viewModel.cityWeather(for: indexPath) {
+            let viewModel = WeatherDetailViewModel(with: cityWeather)
+            let vc = WeatherDetailTableViewController(with: viewModel)
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
