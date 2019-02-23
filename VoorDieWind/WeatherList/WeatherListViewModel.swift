@@ -3,7 +3,7 @@ import Foundation
 
 
 protocol WeatherListViewModelDelegate {
-    func weatherList(_ viewModel: WeatherListViewModel, didFinishUpdate: Bool)
+//    func weatherList(_ viewModel: WeatherListViewModel, didFinishUpdate: Bool)
     func weatherList(_ viewModel: WeatherListViewModel, didRemove indexPath: IndexPath)
 }
 
@@ -42,7 +42,7 @@ extension WeatherListViewModel {
 
 // MARK: - Update all weather
 extension WeatherListViewModel {
-    func updateWeatherList() {
+    @objc func updateWeatherList(_ notification: Notification) {
 //        if let cities = cities, cities.count > 0 {
 //            for city in cities {
                 // TODO: Fix this!!!
@@ -51,6 +51,7 @@ extension WeatherListViewModel {
 //        } else {
 //            delegate?.weatherList(self, didFinishUpdate: true)
 //        }
+        print(notification.object)
     }
 }
 
@@ -72,4 +73,7 @@ extension WeatherListViewModel {
 //    }
 //}
 
+extension WeatherListViewModel {
+    
+}
 

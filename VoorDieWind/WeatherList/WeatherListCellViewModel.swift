@@ -1,3 +1,5 @@
+import Foundation
+
 protocol WeatherViewModelDelegate {
     // TODO: FIX THIS
     func weather(_ viewModel: WeatherListCellViewModel, didFinish update: Bool)
@@ -6,6 +8,7 @@ protocol WeatherViewModelDelegate {
 class WeatherListCellViewModel {
     let cityWeather: CityWeatherModel
     var delegate: WeatherViewModelDelegate?
+    private var notificationCenter: NotificationCenter
     
     private(set) var isUpdating: Bool = false {
         didSet {
@@ -17,15 +20,23 @@ class WeatherListCellViewModel {
     var updateWeatherLoadingStatus: ((_ isUpdating: Bool) -> ())?
     
     init(with cityWeather: CityWeatherModel) {
+        self.notificationCenter = .default
         self.cityWeather = cityWeather
         if cityWeather.currentWeather == nil {
             isUpdating = true
-            CityWeatherStore.shared.updateWeather(for: cityWeather.id) { [weak self] result in
-                self?.cityWeather.currentWeather = result?.currentWeather
-                self?.cityWeather.forecastWeather = result?.forecastWeather
-                self?.isUpdating = false
-                self?.didUpdateCurrentWeather?()
-            }
+            updateWeather()
+        }
+    }
+    
+    func updateWeather() {
+        isUpdating = true
+        CityWeatherStore.shared.updateWeather(for: cityWeather.id) { [weak self] result in
+            self?.cityWeather.currentWeather = result?.currentWeather
+            self?.cityWeather.forecastWeather = result?.forecastWeather
+            self?.isUpdating = false
+            self?.didUpdateCurrentWeather?()
+            self?.notificationCenter.post(name: .weatherUpdated, object: self?.cityWeather ?? nil)
+            print("Updated \(self?.cityWeather.city.name)")
         }
     }
 }
@@ -50,5 +61,12 @@ extension WeatherListCellViewModel {
         } else {
             return nil
         }
+    }
+}
+
+
+extension Notification.Name {
+    static var weatherUpdated: Notification.Name {
+        return .init(rawValue: "WeatherListCell.updatedWeather")
     }
 }

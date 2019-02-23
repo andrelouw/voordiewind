@@ -4,6 +4,7 @@ import UIKit
 class WeatherListTableViewController: UITableViewController {
     var viewModel = WeatherListViewModel()
     var noDataView: UIView?
+    var notificationCenter: NotificationCenter = .default
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +23,8 @@ class WeatherListTableViewController: UITableViewController {
                                 buttonTitle: "Soek 'n stad") { [weak self] in
             self?.showAddCity()
         }
+        
+        notificationCenter.addObserver(self, selector: #selector(updateLoadingStatus(_:)), name: .weatherUpdated, object: nil)
     }
 }
 
@@ -82,7 +85,7 @@ extension WeatherListTableViewController {
 }
 
 // MARK: - Remove cell
-extension WeatherListTableViewController {
+extension WeatherListTableViewController: WeatherListViewModelDelegate {
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let modifyAction = UIContextualAction(style: .normal, title: "Delete", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
             self.showDeleteAlert(for: indexPath)
@@ -128,16 +131,28 @@ extension WeatherListTableViewController: CitySearchTableViewControllerDelegate 
 }
 
 // MARK: - Refresh
-extension WeatherListTableViewController: WeatherListViewModelDelegate {
+extension WeatherListTableViewController {
     @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
-        viewModel.updateWeatherList()
+        for row in 0..<viewModel.numberOfRows {
+            if let cell = tableView.cellForRow(at: IndexPath(row: row, section: 0))  as? WeatherListCell {
+                cell.updateWeather()
+            }
+        }
     }
     
-    func weatherList(_ viewModel: WeatherListViewModel, didFinishUpdate: Bool) {
-        if didFinishUpdate {
-            print("Finished update")
-            refreshControl?.endRefreshing()
+    @objc func updateLoadingStatus(_ notification: Notification) {
+        for row in 0..<viewModel.numberOfRows {
+            if let cell = tableView.cellForRow(at: IndexPath(row: row, section: 0))  as? WeatherListCell {
+                if cell.isCelUpdating {
+                    print("Still busy with \(cell.viewModel?.cityName)")
+                    return
+                } else {
+                    print("Done updating \(cell.viewModel?.cityName)")
+                }
+            }
         }
+        print("Finished update")
+        refreshControl?.endRefreshing()
     }
 }
 

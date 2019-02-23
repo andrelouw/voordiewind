@@ -13,6 +13,8 @@ class WeatherListCell: UITableViewCell {
     func setUpCell(with viewModel: WeatherListCellViewModel) {
         self.viewModel = viewModel
         
+        
+        
         self.cityNameLabel.text = viewModel.cityWeather.city.name
         self.temperatureLabel.text = viewModel.temperature
         self.feelsLikeLabel.text = viewModel.feelsLike
@@ -46,4 +48,14 @@ class WeatherListCell: UITableViewCell {
             }
         }
     }
+    
+    func updateWeather() {
+        viewModel?.updateWeather()
+    }
+    
+    var isCelUpdating: Bool {
+        return viewModel?.isUpdating ?? false
+    }
 }
+
+
