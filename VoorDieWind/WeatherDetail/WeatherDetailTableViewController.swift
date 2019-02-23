@@ -4,7 +4,7 @@ import UIKit
 class WeatherDetailTableViewController: UITableViewController {
     var viewModel: WeatherDetailViewModel?
 
-    init(with model: WeatherViewModel) {
+    init(with model: WeatherListCellViewModel) {
         super.init(style: .plain)
         viewModel = WeatherDetailViewModel(with: model)
         
@@ -19,7 +19,7 @@ class WeatherDetailTableViewController: UITableViewController {
         fatalError("init(coder:) has not been implemented")
     }
     override func viewDidLoad() {
-        title = viewModel?.cityName
+        title = viewModel?.title
         tableView.isUserInteractionEnabled = false
     }
     
@@ -28,7 +28,7 @@ class WeatherDetailTableViewController: UITableViewController {
             return UITableViewHeaderFooterView() }
         
         headerView.currentTemperatureLabel.text = viewModel?.currentTemperature
-        headerView.currentDateLabel.text = viewModel?.currentWeatherDate
+        headerView.currentDateLabel.text = viewModel?.currentDate
         return headerView
     }
     

@@ -41,7 +41,7 @@ class WeatherListTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherCell", for: indexPath) as? WeatherCell,
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherCell", for: indexPath) as? WeatherListCell,
             let weatherViewModel = viewModel.weatherViewModel(for: indexPath.row)
         else { return UITableViewCell() }
         
@@ -150,7 +150,7 @@ extension WeatherListTableViewController {
 // MARK: - Weather detail
 extension WeatherListTableViewController {
     func showDetail() {
-        let model = WeatherViewModel(with: "Welkom", latitude: 51.5171, longitude: -0.1062)
+        let model = WeatherListCellViewModel(with: "Welkom", latitude: 51.5171, longitude: -0.1062)
         model.getWeather()
         let vc = WeatherDetailTableViewController(with: model)
         navigationController?.pushViewController(vc, animated: true)

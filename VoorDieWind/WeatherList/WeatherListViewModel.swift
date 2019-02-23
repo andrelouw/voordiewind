@@ -6,7 +6,7 @@ protocol WeatherListViewModelDelegate {
 }
 
 class WeatherListViewModel {
-    private var cities: [WeatherViewModel]?
+    private var cities: [WeatherListCellViewModel]?
     var delegate: WeatherListViewModelDelegate?
 }
 
@@ -20,27 +20,28 @@ extension WeatherListViewModel {
         return 0
     }
     
-    func city(for row: Int) -> WeatherViewModel? {
+    func city(for row: Int) -> WeatherListCellViewModel? {
         if let city = cities?[row] {
             return city
         }
         return nil
     }
     
-    func weatherViewModel(for row: Int) -> WeatherViewModel? {
+    func weatherViewModel(for row: Int) -> WeatherListCellViewModel? {
         if let viewModel = cities?[row] {
             return viewModel
         }
         return nil
     }
     
+    // Don't pass in viewmodel
     func addCity(_ city: CitySearchViewModel?) {
         guard let city = city else { return }
         if cities == nil {
             cities = []
         }
         
-        let newCity = WeatherViewModel(with: city.name, latitude: Double(city.latitude), longitude: Double(city.longitude))
+        let newCity = WeatherListCellViewModel(with: city.name, latitude: Double(city.latitude), longitude: Double(city.longitude))
         newCity.delegate = self
         cities?.append(newCity)
         newCity.getWeather()
@@ -73,7 +74,7 @@ extension WeatherListViewModel {
 }
 
 extension WeatherListViewModel: WeatherViewModelDelegate {
-    func weather(_ viewModel: WeatherViewModel, didFinish update: Bool) {
+    func weather(_ viewModel: WeatherListCellViewModel, didFinish update: Bool) {
         if let cities = cities {
             for city in cities {
                 if city.isUpdating {

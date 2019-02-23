@@ -1,4 +1,4 @@
-struct CitySearchModel: Codable {
+struct CitySearchModel: Decodable {
     let search: CitySearchResultModel
     
     private enum CodingKeys: String, CodingKey {
@@ -6,7 +6,7 @@ struct CitySearchModel: Codable {
     }
 }
 
-struct CitySearchResultModel: Codable {
+struct CitySearchResultModel: Decodable {
     let results: [CitySearchDetailsModel]
     
     private enum CodingKeys: String, CodingKey {
@@ -14,7 +14,7 @@ struct CitySearchResultModel: Codable {
     }
 }
 
-struct CitySearchDetailsModel: Codable {
+struct CitySearchDetailsModel: Decodable {
     let name: [JSON]
     let region: [JSON]
     let country: [JSON]

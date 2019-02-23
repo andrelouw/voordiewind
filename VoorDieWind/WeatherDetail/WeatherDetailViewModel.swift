@@ -1,31 +1,15 @@
 import Foundation
 
 class WeatherDetailViewModel {
-    var cityName: String
-    var currentTemperature: String?
-    var currentWeatherDate: String?
-    var weatherForecast: [WeatherDetailTableViewCellViewModel]?
+    private var cityName: String
+    private var temperature: Int?
+    private var date: Date?
+    private var weatherForecast: [WeatherDetailTableViewCellViewModel]?
     
-    lazy var dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        return dateFormatter
-    }()
-    
-    lazy var todayDateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd MMMM yyyy"
-        return dateFormatter
-    }()
-    
-    lazy var calendar: Calendar = {
-       return Calendar(identifier: .gregorian)
-    }()
-    
-    init(with model: WeatherViewModel) {
+    init(with model: WeatherListCellViewModel) {
         self.cityName = model.name
-        self.currentTemperature = currentTemperature(from: model.currentWeather?.temperature)
-        self.currentWeatherDate = todayDateString(from: model.forecastWeather?.first?.date)
+        self.temperature = model.currentWeather?.temperature
+        self.date = model.forecastWeather?.first?.date
         if let weather = model.forecastWeather {
             pepareForecast(for: weather)
         }
@@ -35,17 +19,20 @@ class WeatherDetailViewModel {
         return weatherForecast?.count ?? 0
     }
     
-    private func currentTemperature(from string: String?) -> String? {
-        if let temperature = string {
+    var title: String {
+        return cityName
+    }
+    
+    var currentTemperature: String? {
+        if let temperature = temperature {
             return "\(temperature)°"
         }
         return nil
     }
     
-    func todayDateString(from dateString: String?) -> String? {
-        if let string = dateString,
-            let date = dateFormatter.date(from: string) {
-            return todayDateFormatter.string(from: date)
+    var currentDate: String? {
+        if let date = date {
+            return WeatherDate().displayDate(from: date)
         }
         return nil
     }
@@ -54,11 +41,9 @@ class WeatherDetailViewModel {
         self.weatherForecast = []
         for (index, forecast) in weatherForecastList.enumerated() {
             if index < 7 {
-                if let date = weekDay(for: forecast.date) {
-                    self.weatherForecast?.append(WeatherDetailTableViewCellViewModel(date: date,
-                                                                                     maxTemperature: forecast.maxTemperature,
-                                                                                     minTemperature: forecast.minTemperature))
-                }
+                self.weatherForecast?.append(WeatherDetailTableViewCellViewModel(date: forecast.date,
+                                                                                 maxTemperature: forecast.maxTemperature,
+                                                                                 minTemperature: forecast.minTemperature))
             } else {
                 break
             }
@@ -70,13 +55,5 @@ class WeatherDetailViewModel {
             return forecast
         }
         return nil
-    }
-}
-
-extension WeatherDetailViewModel {
-    func weekDay(for dateString: String) -> String? {
-        guard  let date = dateFormatter.date(from: dateString) else { return nil }
-        
-        return dateFormatter.weekdaySymbols[calendar.component(.weekday, from: date) - 1]
     }
 }

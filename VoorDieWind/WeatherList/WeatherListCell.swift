@@ -2,15 +2,15 @@
 import Foundation
 import UIKit
 
-class WeatherCell: UITableViewCell {
+class WeatherListCell: UITableViewCell {
     @IBOutlet weak var cityNameLabel: UILabel!
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var loadingActivityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var feelsLikeLabel: UILabel!
     
-    var viewModel: WeatherViewModel?
+    var viewModel: WeatherListCellViewModel?
     
-    func setUpCell(with viewModel: WeatherViewModel) {
+    func setUpCell(with viewModel: WeatherListCellViewModel) {
         self.viewModel = viewModel
         self.cityNameLabel.text = viewModel.name
         

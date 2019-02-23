@@ -1,9 +1,20 @@
 import UIKit
 
+// TODO: Move to own file
 struct WeatherDetailTableViewCellViewModel {
-    var date: String
-    var maxTemperature: String
-    var minTemperature: String
+    private(set) var date: Date
+    private(set) var maxTemperature: Int
+    private(set) var minTemperature: Int
+    
+    init(date: Date, maxTemperature: Int, minTemperature: Int) {
+        self.date = date
+        self.maxTemperature = maxTemperature
+        self.minTemperature = minTemperature
+    }
+    
+    var day: String {
+        return WeatherDate().weekDay(from: date)
+    }
     
     var maxTemperatureDisplayString: String {
         return "\(maxTemperature)°"
@@ -32,7 +43,7 @@ class WeatherDetailTableViewCell: UITableViewCell {
     }
     
     func setUpCell(with viewModel: WeatherDetailTableViewCellViewModel) {
-        dateLabel.text = viewModel.date
+        dateLabel.text = viewModel.day
         maxTemperatureLabel.text = viewModel.maxTemperatureDisplayString
         minTemperatureLabel.text = viewModel.minTemperatureDisplayString
     }
