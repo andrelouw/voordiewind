@@ -94,6 +94,7 @@
 		6511026C22205DD400F851A1 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				65AA40BA22216F5F003BE907 /* CityWeatherStore.swift */,
 				6511026D22205DF600F851A1 /* NoDataView.xib */,
 				6511026F22205E0700F851A1 /* NoDataView.swift */,
 			);
@@ -179,7 +180,6 @@
 				65A44FDE2215D25B0003E9A5 /* Assets.xcassets */,
 				65A44FE02215D25B0003E9A5 /* LaunchScreen.storyboard */,
 				65A44FE32215D25B0003E9A5 /* Info.plist */,
-				65AA40BA22216F5F003BE907 /* CityWeatherStore.swift */,
 			);
 			path = VoorDieWind;
 			sourceTree = "<group>";
