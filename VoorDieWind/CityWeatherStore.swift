@@ -1,17 +1,14 @@
 class CityWeatherModel {
     var city: CityModel
-    // TODO: consolidate the below into one
-    var currentWeather: CurrentWeatherModel?
-    var forecastWeather: [ForecastWeatherModel]?
+    var weather: WeatherModel?
     
     var id: String {
         return city.identifier
     }
     
-    init(city: CityModel, currentWeather: CurrentWeatherModel? = nil, forecastWeather: [ForecastWeatherModel]? = nil) {
+    init(city: CityModel, weather: WeatherModel? = nil) {
         self.city = city
-        self.currentWeather = currentWeather
-        self.forecastWeather = forecastWeather
+        self.weather = weather
     }
 }
 
@@ -68,26 +65,18 @@ extension CityWeatherStore {
     
     private func handleWeatherSuccess(for identifier: String, with payload: WeatherModel?) {
         guard let payload = payload else { return }
-        updateCurrentWeather(for: identifier, with: payload.current)
-        updateForecastWeather(for: identifier, with: payload.forecast)
+        updateWeather(for: identifier, with: payload)
     }
     
     private func handleWeatherFailure(for identifier: String, with error: WebServiceFailure?) {
-        updateCurrentWeather(for: identifier, with: nil)
-        updateForecastWeather(for: identifier, with: nil)
+        updateWeather(for: identifier, with: nil)
         print(error?.localizedDescription)
     }
     
     // TODO: Consolidate the two
-    private func updateCurrentWeather(for identifier: String, with weather: CurrentWeatherModel?) {
+    private func updateWeather(for identifier: String, with weather: WeatherModel?) {
         if let i = index(for: identifier) {
-            cityWeatherList[i].currentWeather = weather
-        }
-    }
-    
-    private func updateForecastWeather(for identifier: String, with forecast: [ForecastWeatherModel]?) {
-        if let i = index(for: identifier) {
-            cityWeatherList[i].forecastWeather = forecast
+            cityWeatherList[i].weather = weather
         }
     }
 }

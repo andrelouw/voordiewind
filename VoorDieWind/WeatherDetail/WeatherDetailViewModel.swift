@@ -8,7 +8,7 @@ class WeatherDetailViewModel {
     }
     
     var numberOfRows: Int {
-        if let count = cityWeatherModel.forecastWeather?.count {
+        if let count = cityWeatherModel.weather?.forecast.count {
             if count > 7 {
                 return 7
             }
@@ -22,40 +22,20 @@ class WeatherDetailViewModel {
     }
     
     var currentTemperature: String? {
-        if let temperature = cityWeatherModel.currentWeather?.temperature {
+        if let temperature = cityWeatherModel.weather?.current?.temperature {
             return "\(temperature)°"
         }
         return nil
     }
     
     var currentDate: String? {
-        if let date = cityWeatherModel.forecastWeather?.first?.date {
+        if let date = cityWeatherModel.weather?.forecast.first?.date {
             return WeatherDate().displayDate(from: date)
         }
         return nil
     }
     
     func forecast(for indexPath: IndexPath) ->  ForecastWeatherModel? {
-        return cityWeatherModel.forecastWeather?[safe: indexPath.row]
+        return cityWeatherModel.weather?.forecast[safe: indexPath.row]
     }
-    
-//    func pepareForecast(for weatherForecastList: [ForecastWeatherModel]) {
-//        self.weatherForecast = []
-//        for (index, forecast) in weatherForecastList.enumerated() {
-//            if index < 7 {
-//                self.weatherForecast?.append(WeatherDetailTableViewCellViewModel(date: forecast.date,
-//                                                                                 maxTemperature: forecast.maxTemperature,
-//                                                                                 minTemperature: forecast.minTemperature))
-//            } else {
-//                break
-//            }
-//        }
-//    }
-    
-//    func forecastDay(for day: Int) -> WeatherDetailTableViewCellViewModel? {
-//        if let forecast = weatherForecast?[day] {
-//            return forecast
-//        }
-//        return nil
-//    }
 }

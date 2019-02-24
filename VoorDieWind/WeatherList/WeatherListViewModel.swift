@@ -27,7 +27,7 @@ extension WeatherListViewModel {
     
     func addCity(_ city: CityModel) {
         // Not sure where this should happen
-        let cityWeather = CityWeatherModel(city: city, currentWeather: nil, forecastWeather: nil)
+        let cityWeather = CityWeatherModel(city: city, weather: nil)
         CityWeatherStore.shared.add(cityWeather)
     }
 }

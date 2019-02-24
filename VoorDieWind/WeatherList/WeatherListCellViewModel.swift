@@ -6,7 +6,7 @@ protocol WeatherViewModelDelegate {
 }
 
 class WeatherListCellViewModel {
-    let cityWeather: CityWeatherModel
+    var cityWeather: CityWeatherModel
     var delegate: WeatherViewModelDelegate?
     private var notificationCenter: NotificationCenter
     
@@ -22,8 +22,7 @@ class WeatherListCellViewModel {
     init(with cityWeather: CityWeatherModel) {
         self.notificationCenter = .default
         self.cityWeather = cityWeather
-        if cityWeather.currentWeather == nil {
-            isUpdating = true
+        if cityWeather.weather?.current == nil {
             updateWeather()
         }
     }
@@ -31,12 +30,13 @@ class WeatherListCellViewModel {
     func updateWeather() {
         isUpdating = true
         CityWeatherStore.shared.updateWeather(for: cityWeather.id) { [weak self] result in
-            self?.cityWeather.currentWeather = result?.currentWeather
-            self?.cityWeather.forecastWeather = result?.forecastWeather
+            if let result = result {
+                self?.cityWeather = result
+            }
             self?.isUpdating = false
             self?.didUpdateCurrentWeather?()
             self?.notificationCenter.post(name: .weatherUpdated, object: self?.cityWeather ?? nil)
-            print("Updated \(self?.cityWeather.city.name)")
+            print("Updated \(String(describing: self?.cityWeather.city.name))")
         }
     }
 }
@@ -48,7 +48,7 @@ extension WeatherListCellViewModel {
     }
     
     var temperature: String? {
-        if let temp = cityWeather.currentWeather?.temperature {
+        if let temp = cityWeather.weather?.current?.temperature {
             return "\(temp)°"
         } else {
             return "-"
@@ -56,7 +56,7 @@ extension WeatherListCellViewModel {
     }
     
     var feelsLike: String? {
-        if let temp = cityWeather.currentWeather?.feelsLikeTemperature {
+        if let temp = cityWeather.weather?.current?.feelsLikeTemperature{
             return "Feels like: \(temp)°"
         } else {
             return nil

@@ -1,14 +1,14 @@
 import Foundation
 
 struct WeatherModel: Decodable {
-    let data: WeatherDataModel
+    var data: WeatherDataModel
     
     var current: CurrentWeatherModel? {
         return data.current.first
     }
     
     var forecast: [ForecastWeatherModel] {
-        return data.forecast
+      return data.forecast
     }
     
     private enum CodingKeys: String, CodingKey {
@@ -21,8 +21,8 @@ struct WeatherModel: Decodable {
 }
 
 struct WeatherDataModel: Decodable {
-    let current: [CurrentWeatherModel]
-    let forecast: [ForecastWeatherModel]
+    var current: [CurrentWeatherModel]
+    var forecast: [ForecastWeatherModel]
     
     private enum CodingKeys: String, CodingKey {
         case current = "current_condition"
