@@ -199,7 +199,7 @@ extension CitySearchViewModel {
     }
     
     var cancelButton: String {
-        return "Kanseleer"
+        return "Kanselleer"
     }
     
     var searchPlaceHolder: String {
@@ -207,7 +207,7 @@ extension CitySearchViewModel {
     }
     
     var noDataTitle: String {
-        return "Geen stede?"
+        return "Vind jou stad"
     }
     
     var noDataMessage: String {

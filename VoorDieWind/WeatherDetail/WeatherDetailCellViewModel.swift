@@ -18,10 +18,10 @@ struct WeatherDetailCellViewModel {
     }
     
     var maxTitle: String {
-        return "Max"
+        return "Warmste"
     }
     
     var minTitle: String {
-        return "Min"
+        return "Koudste"
     }
 }

@@ -155,6 +155,11 @@ extension WeatherListTableViewController: CitySearchTableViewControllerDelegate 
 // MARK: - Refresh
 extension WeatherListTableViewController {
     @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
+        if viewModel.numberOfRows <= 0 {
+            refreshControl.endRefreshing()
+            return
+        }
+        
         for row in 0..<viewModel.numberOfRows {
             if let cell = tableView.cellForRow(at: IndexPath(row: row, section: 0))  as? WeatherListCell {
                 cell.updateWeather()

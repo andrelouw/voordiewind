@@ -38,6 +38,6 @@ class WeatherDate {
 
 extension WeatherDate {
     var daysOfTheWeek: [String] {
-        return [ "Sondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrydag", "Saturdag"]
+        return [ "Sondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrydag", "Saterdag"]
     }
 }

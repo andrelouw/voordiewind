@@ -46,7 +46,7 @@ extension WeatherListViewModel {
     }
     
     var noDataMessage: String {
-        return "Wil jy nie dalk soek vir jou gunsteling stad nie?"
+        return "Soek gerus vir jou gunsteling stad."
     }
     
     var noDataImage: UIImage {
@@ -70,7 +70,7 @@ extension WeatherListViewModel {
     }
     
     var deleteAlertMessage: String {
-        return  "Het jy vrede gemaak, die stad gaan nou jou voer verlaat"
+        return  "Het jy vrede gemaak dat dié stad nou jou voer gaan verlaat?"
     }
     
     var deleteAlertConfirmation: String {
