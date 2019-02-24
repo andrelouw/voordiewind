@@ -53,13 +53,8 @@ struct CurrentWeatherModel: Decodable {
         do {
             let values = try decoder.container(keyedBy: CodingKeys.self)
             
-            guard let temperature = try Int(values.decode(String.self, forKey: .temperature)) else {
-                throw DecodingError.dataCorrupted(.init(codingPath: [CodingKeys.temperature], debugDescription: "Expecting string representation of Int"))
-            }
-            
-            guard let feelsLikeTemperature = try Int(values.decode(String.self, forKey: .feelsLikeTemperature)) else {
-                throw DecodingError.dataCorrupted(.init(codingPath: [CodingKeys.feelsLikeTemperature], debugDescription: "Expecting string representation of Int"))
-            }
+            let temperature = try WeatherServiceDecoder.decodeStringToInt(for: values, key: .temperature)
+            let feelsLikeTemperature = try WeatherServiceDecoder.decodeStringToInt(for: values, key: .feelsLikeTemperature)
             
             self.init(temperature: temperature, feelsLikeTemperature: feelsLikeTemperature)
         }
@@ -87,17 +82,9 @@ struct ForecastWeatherModel: Decodable {
         do {
             let values = try decoder.container(keyedBy: CodingKeys.self)
             
-            guard let date = try  WeatherDate().date(from: values.decode(String.self, forKey: .date)) else {
-                throw DecodingError.dataCorrupted(.init(codingPath: [CodingKeys.date], debugDescription: "Expecting string representation of Date"))
-            }
-            
-            guard let maxTemperature = try Int(values.decode(String.self, forKey: .maxTemperature)) else {
-                throw DecodingError.dataCorrupted(.init(codingPath: [CodingKeys.maxTemperature], debugDescription: "Expecting string representation of Int"))
-            }
-            
-            guard let minTemperature = try Int(values.decode(String.self, forKey: .minTemperature)) else {
-                throw DecodingError.dataCorrupted(.init(codingPath: [CodingKeys.minTemperature], debugDescription: "Expecting string representation of Int"))
-            }
+            let date = try WeatherServiceDecoder.decodeStringToDate(for: values, key: .date)
+            let maxTemperature = try WeatherServiceDecoder.decodeStringToInt(for: values, key: .maxTemperature)
+            let minTemperature = try WeatherServiceDecoder.decodeStringToInt(for: values, key: .minTemperature)
             
             self.init(date: date, maxTemperature: maxTemperature, minTemperature: minTemperature)
         }
