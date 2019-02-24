@@ -35,6 +35,10 @@ class WeatherDetailViewModel {
         return nil
     }
     
+    var backButtonTitle: String {
+        return "Terug"
+    }
+    
     func forecast(for indexPath: IndexPath) ->  ForecastWeatherModel? {
         return cityWeatherModel.weather?.forecast[safe: indexPath.row]
     }

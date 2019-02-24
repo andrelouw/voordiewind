@@ -91,6 +91,9 @@ extension WeatherListTableViewController {
         if let cityWeather = self.viewModel.cityWeather(for: indexPath) {
             let viewModel = WeatherDetailViewModel(with: cityWeather)
             let vc = WeatherDetailTableViewController(with: viewModel)
+            navigationItem.backBarButtonItem = UIBarButtonItem()
+            navigationItem.backBarButtonItem?.title = viewModel.backButtonTitle
+            
             navigationController?.pushViewController(vc, animated: true)
         }
     }
