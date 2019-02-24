@@ -1,9 +1,9 @@
 import Foundation
+import UIKit
 
 class CitySearchListViewModel {
     typealias CitySearchResultType = CitySearchModel
     
-    // TODO: Make closures
     private var cities: [CityModel]? {
         didSet {
             self.reloadTableViewClosure?()
@@ -18,8 +18,7 @@ class CitySearchListViewModel {
     
     private var errorMessage: String?
     
-    // TODO: Make closures
-    // binding closures
+    // binding closures -> example of closures
     var reloadTableViewClosure: (() -> ())?
     var updateLoadingStatus: ((_ isLoading: Bool) -> ())?
 }
@@ -62,7 +61,7 @@ extension CitySearchListViewModel {
     
     func cellSubtitle(for row: Int) -> String? {
         if shouldShowErrorMessage {
-            if errorMessage == noDataMessage {
+            if errorMessage == noDataCellMessage {
                 return noDataMessageSubtitle
             } else if errorMessage == querySearchErrorMessage {
                 return querySearchErrorMessageSubtitle
@@ -106,17 +105,13 @@ extension CitySearchListViewModel {
     }
 }
 
-// MARK: - Network call
+// MARK: - Network handler
 extension CitySearchListViewModel {
     private func isServiceCallBackStillValid() -> Bool {
         // TODO: Check logic here, maybe delegate?
-        return true
         // Check if string is still valid, things might have changed since we last spoke
-        //                if self?.searchController.searchBar.text?.isEmpty ?? true {
-        //                    self?.errorMessage = nil
-        //                    return
-        //                }
-        //
+        // APi should actually send you back the search string
+        return true
     }
     
     private func handleSearchSuccess(with payload: CitySearchResultType?) {
@@ -124,7 +119,7 @@ extension CitySearchListViewModel {
             errorMessage = nil
             addCities(from: knownPayload)
         } else {
-            errorMessage = noDataMessage
+            errorMessage = noDataCellMessage
             resetCities()
         }
     }
@@ -134,7 +129,7 @@ extension CitySearchListViewModel {
         if let error = error {
             switch error {
             case .parsingFailed(_):
-                errorMessage = noDataMessage
+                errorMessage = noDataCellMessage
                 print("Unable to find any matching weather location to the query submitted!")
             default:
                 errorMessage = querySearchErrorMessage
@@ -149,7 +144,6 @@ extension CitySearchListViewModel {
     private func handleEmptySearch() {
         errorMessage = nil
         resetCities()
-        // TODO: set empty search flag
     }
 }
 
@@ -162,7 +156,20 @@ extension CitySearchListViewModel {
         return false
     }
     
-    private var noDataMessage: String {
+  
+}
+
+// MARK: - Strings
+extension CitySearchListViewModel {
+    private func subtitle(for city: CityModel?) -> String? {
+        // TODO: what if country/city is nil?
+        if let city = city {
+            return "\(city.region) • \(city.country)"
+        }
+        return nil
+    }
+    
+    private var noDataCellMessage: String {
         return "Geen stad te vinde"
     }
     
@@ -177,17 +184,6 @@ extension CitySearchListViewModel {
     private var querySearchErrorMessageSubtitle: String {
         return "Sulke dinge gebeur maar..."
     }
-}
-
-// MARK: - Strings
-extension CitySearchListViewModel {
-    private func subtitle(for city: CityModel?) -> String? {
-        // TODO: what if country/city is nil?
-        if let city = city {
-            return "\(city.region) • \(city.country)"
-        }
-        return nil
-    }
     
     var navigationPrompt: String {
         return "Soek jou stad"
@@ -199,5 +195,29 @@ extension CitySearchListViewModel {
     
     var searchPlaceHolder: String {
         return "Sleutel 'n stad naam in"
+    }
+    
+    var noDataTitle: String {
+        return "Geen stede?"
+    }
+    
+    var noDataMessage: String {
+        return "Soek jou stad in die soek paneel"
+    }
+    
+    var noDataImage: UIImage {
+        return UIImage(named: "city") ?? UIImage()
+    }
+    
+    var addAlertTitle: String {
+        return "Kies 'n ander een"
+    }
+    
+    var addAlertMessage: String {
+        return "Die stad is reeds in jou voer, of het jy vergeet?"
+    }
+    
+    var addAlertCancel: String {
+        return "Goed so!"
     }
 }

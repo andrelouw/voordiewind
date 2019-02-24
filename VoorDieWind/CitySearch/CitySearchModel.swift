@@ -1,3 +1,4 @@
+// MARK: - City Search Model
 struct CitySearchModel: Decodable {
     let search: CitySearchResultModel
     
@@ -6,6 +7,7 @@ struct CitySearchModel: Decodable {
     }
 }
 
+// MARK: - City Search Result Model
 struct CitySearchResultModel: Decodable {
     let results: [CityModel]
     
@@ -14,6 +16,7 @@ struct CitySearchResultModel: Decodable {
     }
 }
 
+// MARK: - City Model
 struct CityModel: Decodable {
     let name: String
     let region: String
@@ -55,7 +58,3 @@ struct CityModel: Decodable {
         }
     }
 }
-
-
-
-

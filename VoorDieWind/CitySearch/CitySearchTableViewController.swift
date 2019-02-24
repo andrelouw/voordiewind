@@ -17,14 +17,7 @@ class CitySearchTableViewController : UITableViewController {
         setUpNavigationBar()
         setUpSearchController()
         setUpBinding()
-        
-        // TODO: Mvoe to VM
-        noDataView = NoDataView(with: "Geen stede?",
-                                message: "Soek jou stad in die soek paneel",
-                                image: UIImage(named: "city") ?? UIImage(),
-                                buttonTitle: nil,
-                                shouldShowButton: false,
-                                buttonHandler: nil)
+        setUpNoDataView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -39,6 +32,7 @@ class CitySearchTableViewController : UITableViewController {
     }
 }
 
+// MARK: - Private
 extension CitySearchTableViewController {
     private func setUpNavigationBar() {
         navigationItem.prompt = viewModel.navigationPrompt
@@ -56,6 +50,36 @@ extension CitySearchTableViewController {
         searchController.searchBar.sizeToFit()
         searchController.searchBar.placeholder = viewModel.searchPlaceHolder
         navigationItem.titleView = searchController.searchBar
+    }
+    
+    private func setUpNoDataView() {
+        noDataView = NoDataView(with: viewModel.noDataTitle,
+                                message: viewModel.noDataMessage,
+                                image: viewModel.noDataImage,
+                                buttonTitle: nil,
+                                shouldShowButton: false,
+                                buttonHandler: nil)
+    }
+    
+    private func showAddAlert() {
+        let alert = UIAlertController(title: viewModel.addAlertTitle, message: viewModel.addAlertMessage, preferredStyle: .alert)
+        let action = UIAlertAction(title: viewModel.addAlertCancel, style: .default, handler: nil)
+        alert.addAction(action)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    private func setUpBinding() {
+        viewModel.reloadTableViewClosure = { [weak self] () in
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        }
+        
+        viewModel.updateLoadingStatus = { [weak self] (isLoading) in
+            DispatchQueue.main.async {
+                self?.searchController.searchBar.isLoading = isLoading
+            }
+        }
     }
 }
 
@@ -101,11 +125,7 @@ extension CitySearchTableViewController {
             delegate?.citySearch(self, didSelect: city)
             self.dismissViewController()
         } else {
-            // TODO: Move to own funciton
-            let alert = UIAlertController(title: "Kies 'n ander een", message: "Die stad is reeds in jou voer, of het jy vergeet?", preferredStyle: .alert)
-            let action = UIAlertAction(title: "Goed so", style: .default, handler: nil)
-            alert.addAction(action)
-            self.present(alert, animated: true, completion: nil)
+            showAddAlert()
         }
     }
 }
@@ -117,32 +137,13 @@ extension CitySearchTableViewController: UISearchResultsUpdating {
     }
 }
 
-// MARK: - Binding
-extension CitySearchTableViewController {
-    func setUpBinding() {
-        viewModel.reloadTableViewClosure = { [weak self] () in
-            DispatchQueue.main.async {
-                // TODO: set whether cell is selctable or not
-                self?.tableView.reloadData()
-            }
-        }
-        
-        viewModel.updateLoadingStatus = { [weak self] (isLoading) in
-            DispatchQueue.main.async {
-                self?.searchController.searchBar.isLoading = isLoading
-            }
-        }
-    }
-}
-
 // MARK: - Helpers
 extension CitySearchTableViewController {
-    func delay(_ delay: Double, closure: @escaping ()->()) {
+    private func delay(_ delay: Double, closure: @escaping ()->()) {
         let when = DispatchTime.now() + delay
         DispatchQueue.main.asyncAfter(deadline: when, execute: closure)
     }
 }
-
 
 // Needed beacuase of some bug where cancel button wont dissapear
 class CustomSearchController: UISearchController {
