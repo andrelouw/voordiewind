@@ -162,9 +162,18 @@ extension CitySearchListViewModel {
 // MARK: - Strings
 extension CitySearchListViewModel {
     private func subtitle(for city: CityModel?) -> String? {
-        // TODO: what if country/city is nil?
-        if let city = city {
-            return "\(city.region) • \(city.country)"
+        if let region = city?.region, let country = city?.country {
+            if !region.isEmpty && !country.isEmpty {
+                return "\(region) • \(country)"
+            }
+            
+            if !region.isEmpty {
+                return "\(region)"
+            }
+            
+            if !country.isEmpty {
+                return "\(country)"
+            }
         }
         return nil
     }
