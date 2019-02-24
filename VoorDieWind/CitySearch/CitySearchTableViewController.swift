@@ -9,7 +9,7 @@ protocol CitySearchTableViewControllerDelegate {
 class CitySearchTableViewController : UITableViewController {
     let searchController = CustomSearchController(searchResultsController: nil) // nil -> use this view
     var delegate: CitySearchTableViewControllerDelegate?
-    var viewModel = CitySearchListViewModel()
+    var viewModel = CitySearchViewModel()
     var noDataView: NoDataView?
     
     override func viewDidLoad() {

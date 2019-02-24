@@ -44,7 +44,7 @@ extension WeatherDetailTableViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherDetailTableViewCell", for: indexPath) as? WeatherDetailTableViewCell,
             let model = viewModel?.forecast(for: indexPath) else { return UITableViewCell() }
         
-        let cellViewModel = WeatherDetailTableViewCellViewModel(with: model)
+        let cellViewModel = WeatherDetailCellViewModel(with: model)
         cell.setUpCell(with: cellViewModel)
 
         if indexPath.row > 0 {

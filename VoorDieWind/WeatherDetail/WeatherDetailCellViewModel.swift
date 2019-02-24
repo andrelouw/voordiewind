@@ -1,4 +1,4 @@
-struct WeatherDetailTableViewCellViewModel {
+struct WeatherDetailCellViewModel {
     private var forecast: ForecastWeatherModel
     
     init(with forecast: ForecastWeatherModel) {

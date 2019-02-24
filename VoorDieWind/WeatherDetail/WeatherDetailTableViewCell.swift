@@ -14,7 +14,7 @@ class WeatherDetailTableViewCell: UITableViewCell {
         minHeadingLabel.font = UIFont.boldSystemFont(ofSize: 12.0)
     }
     
-    func setUpCell(with viewModel: WeatherDetailTableViewCellViewModel) {
+    func setUpCell(with viewModel: WeatherDetailCellViewModel) {
         dateLabel.text = viewModel.day
         maxTemperatureLabel.text = viewModel.maxTemperatureDisplayString
         minTemperatureLabel.text = viewModel.minTemperatureDisplayString

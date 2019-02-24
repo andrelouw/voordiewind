@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-class CitySearchListViewModel {
+class CitySearchViewModel {
     typealias CitySearchResultType = CitySearchModel
     
     private var cities: [CityModel]? {
@@ -24,7 +24,7 @@ class CitySearchListViewModel {
 }
 
 // MARK: - Public interface
-extension CitySearchListViewModel {
+extension CitySearchViewModel {
     var numberOfRows: Int {
         if shouldShowErrorMessage {
             return 1
@@ -92,7 +92,7 @@ extension CitySearchListViewModel {
 }
 
 // MARK: - Cities
-extension CitySearchListViewModel {
+extension CitySearchViewModel {
     private func addCities(from searchModel: CitySearchModel) {
         cities = []
         for city in searchModel.search.results {
@@ -106,7 +106,7 @@ extension CitySearchListViewModel {
 }
 
 // MARK: - Network handler
-extension CitySearchListViewModel {
+extension CitySearchViewModel {
     private func isServiceCallBackStillValid() -> Bool {
         // TODO: Check logic here, maybe delegate?
         // Check if string is still valid, things might have changed since we last spoke
@@ -148,7 +148,7 @@ extension CitySearchListViewModel {
 }
 
 // MARK: - Messages
-extension CitySearchListViewModel {
+extension CitySearchViewModel {
     private var shouldShowErrorMessage: Bool {
         if errorMessage != nil {
             return true
@@ -160,7 +160,7 @@ extension CitySearchListViewModel {
 }
 
 // MARK: - Strings
-extension CitySearchListViewModel {
+extension CitySearchViewModel {
     private func subtitle(for city: CityModel?) -> String? {
         if let region = city?.region, let country = city?.country {
             if !region.isEmpty && !country.isEmpty {
