@@ -22,6 +22,41 @@ class WeatherDetailTableViewController: UITableViewController {
         title = viewModel?.title
         tableView.isUserInteractionEnabled = false
     }
+}
+
+extension WeatherDetailTableViewController {
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 200
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel?.numberOfRows ?? 0
+    }
+}
+
+// MARK: - Cells
+extension WeatherDetailTableViewController {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherDetailTableViewCell", for: indexPath) as? WeatherDetailTableViewCell,
+            let model = viewModel?.forecast(for: indexPath) else { return UITableViewCell() }
+        
+        let cellViewModel = WeatherDetailTableViewCellViewModel(with: model)
+        cell.setUpCell(with: cellViewModel)
+
+        if indexPath.row > 0 {
+            cell.shouldShowHeadings(false)
+        }
+
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "WeatherDetailHeaderView") as? WeatherDetailHeaderView else {
@@ -34,36 +69,6 @@ class WeatherDetailTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return UIView()
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 200
-    }
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel?.numberOfRows ?? 0
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherDetailTableViewCell", for: indexPath) as? WeatherDetailTableViewCell,
-            let model = viewModel?.forecast(for: indexPath) else { return UITableViewCell() }
-        
-        let cellViewModel = WeatherDetailCellViewModel(with: model)
-        cell.setUpCell(with: cellViewModel)
-
-        if indexPath.row > 0 {
-            cell.shouldShowHeadings(false)
-        }
-
-        return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
     }
 }
 
