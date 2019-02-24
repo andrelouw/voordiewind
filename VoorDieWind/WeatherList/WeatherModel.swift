@@ -1,5 +1,6 @@
 import Foundation
 
+/// MARK: - Weather Model
 struct WeatherModel: Decodable {
     var data: WeatherDataModel
     
@@ -20,6 +21,7 @@ struct WeatherModel: Decodable {
     }
 }
 
+/// MARK: - Weather Data Model
 struct WeatherDataModel: Decodable {
     var current: [CurrentWeatherModel]
     var forecast: [ForecastWeatherModel]
@@ -35,6 +37,7 @@ struct WeatherDataModel: Decodable {
     }
 }
 
+/// MARK: - Current Weather
 struct CurrentWeatherModel: Decodable {
     let temperature: Int
     let feelsLikeTemperature: Int
@@ -61,6 +64,7 @@ struct CurrentWeatherModel: Decodable {
     }
 }
 
+/// MARK: - Forecast Weather
 struct ForecastWeatherModel: Decodable {
     let date: Date
     let maxTemperature: Int

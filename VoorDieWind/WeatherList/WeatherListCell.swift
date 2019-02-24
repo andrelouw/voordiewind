@@ -9,19 +9,31 @@ class WeatherListCell: UITableViewCell {
     @IBOutlet weak var feelsLikeLabel: UILabel!
     
     var viewModel: WeatherListCellViewModel?
-    
+}
+
+// MARK: - Public
+extension WeatherListCell {
     func setUpCell(with viewModel: WeatherListCellViewModel) {
         self.viewModel = viewModel
-        
-        
+        self.viewModel?.delegate = self
         
         self.cityNameLabel.text = viewModel.cityWeather.city.name
         self.temperatureLabel.text = viewModel.temperature
         self.feelsLikeLabel.text = viewModel.feelsLike
         self.shouldShowLoading(viewModel.isUpdating)
-        setUpBinding()
     }
     
+    func updateWeather() {
+        viewModel?.updateWeather()
+    }
+    
+    var isCelUpdating: Bool {
+        return viewModel?.isUpdating ?? false
+    }
+}
+
+// MARK: - Private
+extension WeatherListCell {
     private func shouldShowLoading(_ isLoading: Bool) {
         if isLoading {
             self.loadingActivityIndicator.startAnimating()
@@ -33,28 +45,21 @@ class WeatherListCell: UITableViewCell {
             self.feelsLikeLabel.isHidden = false
         }
     }
-    
-    private func setUpBinding() {
-        viewModel?.didUpdateCurrentWeather = { [weak self] () in
-            DispatchQueue.main.async {
-                self?.temperatureLabel.text = self?.viewModel?.temperature
-                self?.feelsLikeLabel.text = self?.viewModel?.feelsLike
-            }
-        }
-        
-        viewModel?.updateWeatherLoadingStatus = { [weak self] (isUpdating) in
-            DispatchQueue.main.async {
-                self?.shouldShowLoading(isUpdating)
-            }
+}
+
+// MARK: - View model delegate
+extension WeatherListCell: WeatherListCellViewModelDelegate {
+    func weatherListCellViewModel(_ viewModel: WeatherListCellViewModel, didUpdate weather: CityWeatherModel?) {
+        DispatchQueue.main.async { [weak self] in
+            self?.temperatureLabel.text = viewModel.temperature
+            self?.feelsLikeLabel.text = viewModel.feelsLike
         }
     }
     
-    func updateWeather() {
-        viewModel?.updateWeather()
-    }
-    
-    var isCelUpdating: Bool {
-        return viewModel?.isUpdating ?? false
+    func weatherListCellViewModel(_ viewModel: WeatherListCellViewModel, didUpdate loadingStatus: Bool) {
+        DispatchQueue.main.async { [weak self] in
+            self?.shouldShowLoading(loadingStatus)
+        }
     }
 }
 

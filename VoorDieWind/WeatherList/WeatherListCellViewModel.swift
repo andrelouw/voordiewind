@@ -1,23 +1,20 @@
 import Foundation
 
-protocol WeatherViewModelDelegate {
-    // TODO: FIX THIS
-    func weather(_ viewModel: WeatherListCellViewModel, didFinish update: Bool)
+protocol WeatherListCellViewModelDelegate {
+    func weatherListCellViewModel(_ viewModel: WeatherListCellViewModel, didUpdate weather: CityWeatherModel?)
+    func weatherListCellViewModel(_ viewModel: WeatherListCellViewModel, didUpdate loadingStatus: Bool)
 }
 
 class WeatherListCellViewModel {
     var cityWeather: CityWeatherModel
-    var delegate: WeatherViewModelDelegate?
+    var delegate: WeatherListCellViewModelDelegate?
     private var notificationCenter: NotificationCenter
     
     private(set) var isUpdating: Bool = false {
         didSet {
-            self.updateWeatherLoadingStatus?(isUpdating)
+            delegate?.weatherListCellViewModel(self, didUpdate: isUpdating)
         }
     }
-    
-    var didUpdateCurrentWeather: (() -> ())?
-    var updateWeatherLoadingStatus: ((_ isUpdating: Bool) -> ())?
     
     init(with cityWeather: CityWeatherModel) {
         self.notificationCenter = .default
@@ -26,17 +23,20 @@ class WeatherListCellViewModel {
             updateWeather()
         }
     }
-    
+}
+
+// MARK: - Public
+extension WeatherListCellViewModel {
     func updateWeather() {
         isUpdating = true
         CityWeatherStore.shared.updateWeather(for: cityWeather.id) { [weak self] result in
-            if let result = result {
-                self?.cityWeather = result
-            }
-            self?.isUpdating = false
-            self?.didUpdateCurrentWeather?()
-            self?.notificationCenter.post(name: .weatherUpdated, object: self?.cityWeather ?? nil)
-            print("Updated \(String(describing: self?.cityWeather.city.name))")
+            guard let result = result, let strongSelf = self else { return }
+           
+            strongSelf.cityWeather = result
+            strongSelf.isUpdating = false
+            strongSelf.delegate?.weatherListCellViewModel(strongSelf, didUpdate: strongSelf.cityWeather)
+            strongSelf.notificationCenter.post(name: .weatherUpdated, object: strongSelf.cityWeather)
+            print("Updated \(String(describing: strongSelf.cityWeather.city.name))")
         }
     }
 }
@@ -64,7 +64,7 @@ extension WeatherListCellViewModel {
     }
 }
 
-
+// MARK: - Notificication
 extension Notification.Name {
     static var weatherUpdated: Notification.Name {
         return .init(rawValue: "WeatherListCell.updatedWeather")

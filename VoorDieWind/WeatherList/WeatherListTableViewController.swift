@@ -8,23 +8,46 @@ class WeatherListTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // TODO: To VM
-        title = "Voor die wind"
-        self.navigationController?.navigationBar.prefersLargeTitles = true
+        title = viewModel.title
         viewModel.delegate = self
         
+        setUpNavigationBar()
+        setUpRefreshControl()
+        setUpNoDataView()
+        setUpNotification()
+    }
+}
+
+// MARK: - Private
+extension WeatherListTableViewController {
+    private func setUpNavigationBar() {
+          self.navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
+    private func setUpRefreshControl() {
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(handleRefresh(_:)), for: .valueChanged)
-        
-        // TODO: To VM
-        noDataView = NoDataView(with: "Geen stede in jou voer?",
-                                message: "Wil jy nie dalk soek vir jou gunsteling stad nie?",
-                                image: UIImage(named: "umbrella") ?? UIImage(),
-                                buttonTitle: "Soek 'n stad") { [weak self] in
-            self?.showAddCity()
-        }
-        
+    }
+    
+    private func setUpNoDataView() {
+        noDataView = NoDataView(with: viewModel.noDataTitle,
+                                message: viewModel.noDataMessage,
+                                image: viewModel.noDataImage,
+                                buttonTitle: viewModel.noDataButtonTitle) { [weak self] in self?.showAddCity() }
+    }
+
+    private func setUpNotification() {
         notificationCenter.addObserver(self, selector: #selector(updateLoadingStatus(_:)), name: .weatherUpdated, object: nil)
+    }
+    
+    private func showNoDataView() {
+        tableView.backgroundView  = noDataView
+        tableView.separatorStyle  = .none
+    }
+    
+    private func hideNoDataView() {
+        tableView.backgroundView  = nil
+        tableView.separatorStyle  = .singleLine
     }
 }
 
@@ -35,13 +58,10 @@ extension WeatherListTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // TODO: Break out to own method
         if viewModel.numberOfRows > 0 {
-            tableView.backgroundView  = nil
-            tableView.separatorStyle  = .singleLine
+           hideNoDataView()
         } else {
-            tableView.backgroundView  = noDataView
-            tableView.separatorStyle  = .none
+           showNoDataView()
         }
         return viewModel.numberOfRows
     }
@@ -52,7 +72,6 @@ extension WeatherListTableViewController {
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return UIView()
     }
-    
 }
 
 // MARK: - Cells
@@ -81,6 +100,7 @@ extension WeatherListTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        // TODO: check if we can display the detail weather
         return true
     }
 }
@@ -88,23 +108,22 @@ extension WeatherListTableViewController {
 // MARK: - Remove cell
 extension WeatherListTableViewController: WeatherListViewModelDelegate {
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let modifyAction = UIContextualAction(style: .normal, title: "Delete", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+        let deleteAction = UIContextualAction(style: .normal, title: viewModel.deleteButtonTitle, handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
             self.showDeleteAlert(for: indexPath)
             success(true)
         })
         
-        modifyAction.backgroundColor = .red
-        modifyAction.title = "Verwyder"
+        deleteAction.backgroundColor = viewModel.deleteButtonColor
         
-        return UISwipeActionsConfiguration(actions: [modifyAction])
+        return UISwipeActionsConfiguration(actions: [deleteAction])
     }
     
     func showDeleteAlert(for indexPath: IndexPath) {
-        let alert = UIAlertController(title: "Is jy seker?", message: "Het jy vrede gemaak, die stad gaan nou jou voer verlaat", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Gaan voort", style: .destructive, handler: { [weak self] _ in
+        let alert = UIAlertController(title: viewModel.deleteAlertTitle, message: viewModel.deleteAlertMessage, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: viewModel.deleteAlertConfirmation, style: .destructive, handler: { [weak self] _ in
             self?.removeRow(at: indexPath)
         })
-        let cancelAction = UIAlertAction(title: "Gaan terug", style: .default, handler: nil)
+        let cancelAction = UIAlertAction(title: viewModel.deleteAlertCancel, style: .default, handler: nil)
         
         alert.addAction(cancelAction)
         alert.addAction(okAction)
@@ -121,7 +140,6 @@ extension WeatherListTableViewController: WeatherListViewModelDelegate {
         tableView.endUpdates()
     }
 }
-
 
 // MARK: - City search
 extension WeatherListTableViewController: CitySearchTableViewControllerDelegate {
@@ -145,10 +163,10 @@ extension WeatherListTableViewController {
         for row in 0..<viewModel.numberOfRows {
             if let cell = tableView.cellForRow(at: IndexPath(row: row, section: 0))  as? WeatherListCell {
                 if cell.isCelUpdating {
-                    print("Still busy with \(cell.viewModel?.cityName)")
+                    print("Still busy with \(String(describing: cell.viewModel?.cityName))")
                     return
                 } else {
-                    print("Done updating \(cell.viewModel?.cityName)")
+                    print("Done updating \(String(describing: cell.viewModel?.cityName))")
                 }
             }
         }
@@ -161,21 +179,11 @@ extension WeatherListTableViewController {
 // MARK: - Segues
 extension WeatherListTableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
         guard let nav = segue.destination as? UINavigationController,
             let vc = nav.viewControllers.first as? CitySearchTableViewController else { return }
-        
         vc.delegate = self
     }
     
-    func showDetail() {
-        //        let model = WeatherListCellViewModel(with: "Welkom", latitude: 51.5171, longitude: -0.1062)
-        //        model.getWeather()
-        //        let vc = WeatherDetailTableViewController(with: model)
-        //        navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    // For convenience only
     func showAddCity() {
         performSegue(withIdentifier: "showAddCity", sender: self)
     }
