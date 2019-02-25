@@ -2,9 +2,10 @@ import Foundation
 import UIKit
 
 class WeatherListTableViewController: UITableViewController {
+    private var noDataView: UIView?
+    private var notificationCenter: NotificationCenter = .default
+    
     var viewModel = WeatherListViewModel()
-    var noDataView: UIView?
-    var notificationCenter: NotificationCenter = .default
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -121,7 +122,7 @@ extension WeatherListTableViewController: WeatherListViewModelDelegate {
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
     
-    func showDeleteAlert(for indexPath: IndexPath) {
+    private func showDeleteAlert(for indexPath: IndexPath) {
         let alert = UIAlertController(title: viewModel.deleteAlertTitle, message: viewModel.deleteAlertMessage, preferredStyle: .alert)
         let okAction = UIAlertAction(title: viewModel.deleteAlertConfirmation, style: .destructive, handler: { [weak self] _ in
             self?.removeRow(at: indexPath)
@@ -182,7 +183,6 @@ extension WeatherListTableViewController {
         refreshControl?.endRefreshing()
     }
 }
-
 
 // MARK: - Segues
 extension WeatherListTableViewController {

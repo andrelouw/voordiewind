@@ -6,7 +6,7 @@ protocol WeatherListViewModelDelegate {
 }
 
 class WeatherListViewModel {
-    var cities: [CityWeatherModel] {
+    private var cities: [CityWeatherModel] {
         return CityWeatherStore.shared.cityWeatherList
     }
     var delegate: WeatherListViewModelDelegate?

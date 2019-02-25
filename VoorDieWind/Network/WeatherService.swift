@@ -8,9 +8,9 @@ enum WeatherServicePath: String {
 final class WeatherService {
     typealias GetCompletion<ResultType> = (_ result: Result<ResultType?, WebServiceFailure>) -> Void
     
-    let baseURL = "http://api.worldweatheronline.com/premium/v1/%@.ashx"
-    let key = "ed4a649fd5bd49b5a9425943190702"
-    let format = "json"
+    private let baseURL = "http://api.worldweatheronline.com/premium/v1/%@.ashx"
+    private let key = "ed4a649fd5bd49b5a9425943190702"
+    private let format = "json"
 }
 
 // MARK: - Get query

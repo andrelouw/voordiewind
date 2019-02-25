@@ -8,6 +8,7 @@ protocol WeatherListCellViewModelDelegate {
 class WeatherListCellViewModel {
     var cityWeather: CityWeatherModel
     var delegate: WeatherListCellViewModelDelegate?
+    
     private var notificationCenter: NotificationCenter
     
     private(set) var isUpdating: Bool = false {
