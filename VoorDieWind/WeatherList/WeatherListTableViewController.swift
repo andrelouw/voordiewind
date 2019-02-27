@@ -3,7 +3,7 @@ import UIKit
 
 class WeatherListTableViewController: UITableViewController {
     private var noDataView: UIView?
-    private var notificationCenter: NotificationCenter = .default
+    private var weatherUpdateObserver: NSObjectProtocol?
     
     var viewModel = WeatherListViewModel()
     
@@ -16,6 +16,12 @@ class WeatherListTableViewController: UITableViewController {
         setUpRefreshControl()
         setUpNoDataView()
         setUpNotification()
+    }
+    
+    deinit {
+        if let observer = weatherUpdateObserver {
+            NotificationCenter.default.removeObserver(weatherUpdateObserver)
+        }
     }
 }
 
@@ -38,7 +44,11 @@ extension WeatherListTableViewController {
     }
 
     private func setUpNotification() {
-        notificationCenter.addObserver(self, selector: #selector(updateLoadingStatus(_:)), name: .weatherUpdated, object: nil)
+        weatherUpdateObserver = NotificationCenter.default.addObserver(forName: .weatherUpdated,
+                                                                       object: nil,
+                                                                       queue: OperationQueue.main,
+                                                                       using: { [weak self] (notification) in                                                                        self?.updateLoadingStatus(notification)
+        })
     }
     
     private func showNoDataView() {
